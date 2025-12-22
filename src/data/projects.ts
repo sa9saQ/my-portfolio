@@ -45,6 +45,16 @@ export const projects: Project[] = [
   },
   {
     id: 4,
+    titleKey: "items.bakeAndBloom.title",
+    descriptionKey: "items.bakeAndBloom.description",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    image: "/projects/bake-and-bloom.jpg",
+    color: "from-amber-600 to-orange-500",
+    category: "hp",
+    demo: "https://bake-and-bloom.vercel.app/",
+  },
+  {
+    id: 5,
     titleKey: "items.comingSoon.title",
     descriptionKey: "items.comingSoon.description",
     tags: ["TypeScript", "Next.js", "AI"],
