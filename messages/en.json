@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "skills": "Skills",
+    "contact": "Contact"
+  },
+  "hero": {
+    "welcome": "Welcome to my Portfolio",
+    "greeting": "Hi, I'm ",
+    "name": "Iori Kobayashi",
+    "subtitle": "AI × Creator | Building innovative web products with AI",
+    "viewProjects": "View Projects",
+    "contactMe": "Contact Me",
+    "scrollDown": "Scroll Down"
+  },
+  "about": {
+    "title": "About Me",
+    "heading": "Who I Am",
+    "hello": "Hello!",
+    "description": "I'm a creator who builds innovative web products using AI. I'm skilled at turning ideas into reality using the latest AI technologies and tools.",
+    "intro": "In this era where you can build full-fledged web applications with AI assistance even without deep programming knowledge, I'm at the forefront, creating new things with ideas and creativity as my weapons.",
+    "features": {
+      "cleanCode": {
+        "title": "AI Utilization",
+        "description": "Mastering AI tools like ChatGPT and Claude to develop efficiently."
+      },
+      "creativeDesign": {
+        "title": "Ideation",
+        "description": "Planning and designing unique products with original ideas."
+      },
+      "performance": {
+        "title": "Learning Drive",
+        "description": "Actively learning new technologies and tools, constantly evolving."
+      },
+      "innovation": {
+        "title": "Execution",
+        "description": "Turning ideas into reality. Not just thinking, but actually building."
+      }
+    }
+  },
+  "projects": {
+    "title": "Portfolio",
+    "heading": "What I've Built",
+    "allProjects": "All Projects",
+    "viewAll": "View All",
+    "viewMore": "View More on GitHub",
+    "backToTop": "Back to Top",
+    "noProjects": "No projects in this category yet.",
+    "categories": {
+      "all": "All",
+      "hp": "Homepage",
+      "ai": "AI",
+      "web": "Web",
+      "mobile": "Mobile"
+    },
+    "items": {
+      "schoolHp": {
+        "title": "School Website",
+        "description": "A corporate website for educational institutions. Features sophisticated design showcasing 50+ years of history, with full responsive support."
+      },
+      "chatbot": {
+        "title": "AI Chatbot",
+        "description": "An intelligent chatbot powered by the latest AI APIs. A natural conversation assistant."
+      },
+      "portfolio": {
+        "title": "Portfolio Website",
+        "description": "This site was also built with AI. Features modern design and animations."
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "New project in preparation. Stay tuned!"
+      }
+    }
+  },
+  "skills": {
+    "title": "What I Can Do",
+    "heading": "Skills & Tools",
+    "categories": {
+      "ai": "AI Utilization",
+      "tools": "Tools I Use",
+      "creating": "Creative Skills"
+    },
+    "alsoExperienced": "Other tools I use"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "heading": "Feel Free to Reach Out",
+    "description": "Whether it's a new project inquiry, collaboration invitation, or just a simple 'hello' - I'd love to hear from you. Don't hesitate to get in touch!",
+    "email": "Email",
+    "location": "Location",
+    "locationValue": "Tokyo, Japan",
+    "followMe": "Follow me on",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "What's this about?",
+      "message": "Message",
+      "messagePlaceholder": "Feel free to send a message...",
+      "send": "Send Message",
+      "sent": "Message Sent!",
+      "sentMessage": "Thank you for reaching out. I'll get back to you soon!"
+    }
+  },
+  "footer": {
+    "description": "Building innovative web products with AI.",
+    "quickLinks": "Quick Links",
+    "connect": "Connect",
+    "madeWith": "Made with",
+    "rights": "All rights reserved."
+  }
+}

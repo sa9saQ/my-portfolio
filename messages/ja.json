@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "about": "私について",
+    "projects": "プロジェクト",
+    "skills": "スキル",
+    "contact": "お問い合わせ"
+  },
+  "hero": {
+    "welcome": "ポートフォリオへようこそ",
+    "greeting": "こんにちは、",
+    "name": "Iori Kobayashi",
+    "subtitle": "AI × クリエイター | AIと共に革新的なWebプロダクトを創造",
+    "viewProjects": "プロジェクトを見る",
+    "contactMe": "お問い合わせ",
+    "scrollDown": "スクロール"
+  },
+  "about": {
+    "title": "私について",
+    "heading": "Who I Am",
+    "hello": "こんにちは！",
+    "description": "AIを活用して革新的なWebプロダクトを創造するクリエイターです。最新のAI技術とツールを駆使し、アイデアを形にすることが得意です。",
+    "intro": "プログラミングの深い知識がなくても、AIの力を借りて本格的なWebアプリケーションを作れる時代。私はその最前線で、アイデアと創造力を武器に新しいものを生み出しています。",
+    "features": {
+      "cleanCode": {
+        "title": "AI活用力",
+        "description": "ChatGPT、Claude等のAIツールを使いこなし、効率的に開発を進めます。"
+      },
+      "creativeDesign": {
+        "title": "アイデア力",
+        "description": "独創的な発想で、ユニークなプロダクトを企画・設計します。"
+      },
+      "performance": {
+        "title": "学習意欲",
+        "description": "新しい技術やツールを積極的に学び、常に進化し続けます。"
+      },
+      "innovation": {
+        "title": "実現力",
+        "description": "アイデアを形にする。考えるだけでなく、実際に作り上げます。"
+      }
+    }
+  },
+  "projects": {
+    "title": "ポートフォリオ",
+    "heading": "作ったもの",
+    "allProjects": "すべてのプロジェクト",
+    "viewAll": "すべて見る",
+    "viewMore": "GitHubでもっと見る",
+    "backToTop": "トップに戻る",
+    "noProjects": "このカテゴリにはまだプロジェクトがありません。",
+    "categories": {
+      "all": "すべて",
+      "hp": "ホームページ",
+      "ai": "AI",
+      "web": "Web",
+      "mobile": "モバイル"
+    },
+    "items": {
+      "schoolHp": {
+        "title": "学園ホームページ",
+        "description": "教育機関向けのコーポレートサイト。50年以上の実績を伝える洗練されたデザインと、レスポンシブ対応が特徴です。"
+      },
+      "chatbot": {
+        "title": "AIチャットボット",
+        "description": "最新のAI APIを活用したインテリジェントなチャットボット。自然な会話ができるアシスタントです。"
+      },
+      "portfolio": {
+        "title": "ポートフォリオサイト",
+        "description": "このサイト自体もAIと一緒に作りました。モダンなデザインとアニメーションが特徴です。"
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "新しいプロジェクトを準備中。お楽しみに！"
+      }
+    }
+  },
+  "skills": {
+    "title": "できること",
+    "heading": "スキル & ツール",
+    "categories": {
+      "ai": "AI活用",
+      "tools": "使用ツール",
+      "creating": "制作スキル"
+    },
+    "alsoExperienced": "その他使えるもの"
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "heading": "お気軽にどうぞ",
+    "description": "新しいプロジェクトのご相談、コラボレーションのお誘い、または単純に「こんにちは」でも大歓迎です。お気軽にご連絡ください。",
+    "email": "メール",
+    "location": "所在地",
+    "locationValue": "東京, 日本",
+    "followMe": "フォローする",
+    "form": {
+      "name": "お名前",
+      "namePlaceholder": "お名前",
+      "email": "メールアドレス",
+      "emailPlaceholder": "your@email.com",
+      "subject": "件名",
+      "subjectPlaceholder": "ご用件は？",
+      "message": "メッセージ",
+      "messagePlaceholder": "お気軽にメッセージをどうぞ...",
+      "send": "送信する",
+      "sent": "送信完了！",
+      "sentMessage": "お問い合わせありがとうございます。近日中にご返信いたします！"
+    }
+  },
+  "footer": {
+    "description": "AIと共に革新的なWebプロダクトを創造しています。",
+    "quickLinks": "クイックリンク",
+    "connect": "つながる",
+    "madeWith": "Made with",
+    "rights": "All rights reserved."
+  }
+}
