@@ -71,6 +71,10 @@
       "comingSoon": {
         "title": "Coming Soon",
         "description": "New project in preparation. Stay tuned!"
+      },
+      "bakeAndBloom": {
+        "title": "BAKE & BLOOM",
+        "description": "A bakery and cafe homepage. Warm design and smooth animations showcase the shop's charm."
       }
     }
   },

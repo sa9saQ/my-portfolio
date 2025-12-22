@@ -71,6 +71,10 @@
       "comingSoon": {
         "title": "Coming Soon",
         "description": "新しいプロジェクトを準備中。お楽しみに！"
+      },
+      "bakeAndBloom": {
+        "title": "BAKE & BLOOM",
+        "description": "焼きたてパンとカフェのホームページ。温かみのあるデザインとスムーズなアニメーションで、お店の魅力を伝えます。"
       }
     }
   },
