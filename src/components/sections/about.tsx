@@ -44,13 +44,10 @@ export function AboutSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-primary text-sm font-medium uppercase tracking-wider">
-            {t("title")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-2 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-2">
             {t("heading")}
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full" />
+          <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -61,26 +58,12 @@ export function AboutSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative aspect-square max-w-md mx-auto">
-              <motion.div
-                className="absolute -top-4 -left-4 w-24 h-24 bg-primary/20 rounded-2xl"
-                animate={{ rotate: [0, 10, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              />
-              <motion.div
-                className="absolute -bottom-4 -right-4 w-32 h-32 bg-pink-500/20 rounded-full"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
+              <div className="absolute -top-4 -left-4 w-24 h-24 bg-primary/20 rounded-2xl" />
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-accent/20 rounded-full" />
 
-              <div className="relative z-10 w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-secondary to-secondary/50 p-8 flex flex-col justify-center glass">
+              <div className="relative z-10 w-full h-full rounded-3xl overflow-hidden bg-card border border-border p-8 flex flex-col justify-center">
                 <div className="space-y-4">
-                  <motion.div
-                    className="text-6xl"
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    👋
-                  </motion.div>
+                  <span className="text-5xl">👋</span>
                   <h3 className="text-2xl font-bold">{t("hello")}</h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {t("description")}

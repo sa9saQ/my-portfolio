@@ -4,48 +4,48 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
+import { Bot, Wrench, Lightbulb, type LucideIcon } from "lucide-react";
 
 interface Skill {
   name: string;
   level: number;
-  color: string;
 }
 
 interface SkillCategory {
   titleKey: string;
-  icon: string;
+  icon: LucideIcon;
   skills: Skill[];
 }
 
 const skillCategories: SkillCategory[] = [
   {
     titleKey: "categories.ai",
-    icon: "🤖",
+    icon: Bot,
     skills: [
-      { name: "Claude / Claude Code", level: 95, color: "from-orange-500 to-amber-500" },
-      { name: "ChatGPT / Codex", level: 90, color: "from-green-500 to-emerald-500" },
-      { name: "Gemini", level: 85, color: "from-blue-500 to-cyan-500" },
-      { name: "Cursor", level: 90, color: "from-purple-500 to-violet-500" },
+      { name: "Claude / Claude Code", level: 95 },
+      { name: "ChatGPT / Codex", level: 90 },
+      { name: "Gemini", level: 85 },
+      { name: "Cursor", level: 90 },
     ],
   },
   {
     titleKey: "categories.tools",
-    icon: "🛠️",
+    icon: Wrench,
     skills: [
-      { name: "CodeRabbit", level: 85, color: "from-orange-500 to-red-500" },
-      { name: "BugBot", level: 80, color: "from-pink-500 to-rose-500" },
-      { name: "Git / GitHub", level: 75, color: "from-gray-600 to-gray-400" },
-      { name: "VS Code", level: 85, color: "from-blue-500 to-indigo-500" },
+      { name: "CodeRabbit", level: 85 },
+      { name: "BugBot", level: 80 },
+      { name: "Git / GitHub", level: 75 },
+      { name: "VS Code", level: 85 },
     ],
   },
   {
     titleKey: "categories.creating",
-    icon: "✨",
+    icon: Lightbulb,
     skills: [
-      { name: "Webサイト制作", level: 85, color: "from-cyan-500 to-blue-500" },
-      { name: "UIデザイン", level: 75, color: "from-indigo-500 to-purple-500" },
-      { name: "プロンプト設計", level: 95, color: "from-amber-500 to-orange-500" },
-      { name: "企画 / アイデア", level: 95, color: "from-red-500 to-pink-500" },
+      { name: "Webサイト制作", level: 85 },
+      { name: "UIデザイン", level: 75 },
+      { name: "プロンプト設計", level: 95 },
+      { name: "企画 / アイデア", level: 95 },
     ],
   },
 ];
@@ -60,9 +60,9 @@ function SkillBar({ skill, delay }: { skill: Skill; delay: number }) {
         <span className="font-medium">{skill.name}</span>
         <span className="text-muted-foreground">{skill.level}%</span>
       </div>
-      <div className="h-3 bg-secondary rounded-full overflow-hidden">
+      <div className="h-2 bg-muted rounded-full overflow-hidden">
         <motion.div
-          className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
+          className="h-full bg-primary rounded-full"
           initial={{ width: 0 }}
           animate={isInView ? { width: `${skill.level}%` } : {}}
           transition={{ duration: 1, delay, ease: "easeOut" }}
@@ -81,7 +81,7 @@ export function SkillsSection() {
     <section id="skills" className="py-24 px-4 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
 
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
@@ -91,13 +91,10 @@ export function SkillsSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-primary text-sm font-medium uppercase tracking-wider">
-            {t("title")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-2 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-2">
             {t("heading")}
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full" />
+          <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         {/* Skills Grid */}
@@ -112,7 +109,9 @@ export function SkillsSection() {
             >
               {/* Category Header */}
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-3xl">{category.icon}</span>
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <category.icon className="w-6 h-6 text-primary" />
+                </div>
                 <h3 className="text-xl font-bold">{t(category.titleKey)}</h3>
               </div>
 

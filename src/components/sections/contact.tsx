@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Mail, MapPin, Send, Github, Linkedin, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Send, Github, Linkedin, CheckCircle, AlertCircle } from "lucide-react";
 import { XIcon } from "@/components/icons/x-icon";
 import { cn } from "@/lib/utils";
 
@@ -14,11 +14,17 @@ const socialLinks = [
   { icon: Linkedin, href: "https://www.linkedin.com/in/iori-kobayashi-099745390", label: "LinkedIn" },
 ];
 
+// Formspree endpoint - 登録後にIDを設定してください
+const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ID
+  ? `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`
+  : null;
+
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const t = useTranslations("contact");
 
   const contactInfo = [
@@ -38,11 +44,45 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+
+    // Formspreeが未設定の場合はmailtoにフォールバック
+    if (!FORMSPREE_ENDPOINT) {
+      const name = formData.get("name") as string;
+      const email = formData.get("email") as string;
+      const subject = formData.get("subject") as string;
+      const message = formData.get("message") as string;
+
+      const mailtoUrl = `mailto:yizhix797@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
+      window.location.href = mailtoUrl;
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("送信に失敗しました");
+      }
+
+      setIsSubmitted(true);
+    } catch {
+      setError(t("form.error"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -58,13 +98,10 @@ export function ContactSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-primary text-sm font-medium uppercase tracking-wider">
-            {t("title")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-2 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-2">
             {t("heading")}
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full" />
+          <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -162,6 +199,17 @@ export function ContactSection() {
                 </motion.div>
               ) : (
                 <>
+                  {error && (
+                    <motion.div
+                      className="flex items-center gap-2 p-4 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                      <p className="text-sm">{error}</p>
+                    </motion.div>
+                  )}
+
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">
@@ -169,6 +217,7 @@ export function ContactSection() {
                       </label>
                       <input
                         type="text"
+                        name="name"
                         required
                         className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                         placeholder={t("form.namePlaceholder")}
@@ -180,6 +229,7 @@ export function ContactSection() {
                       </label>
                       <input
                         type="email"
+                        name="email"
                         required
                         className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                         placeholder={t("form.emailPlaceholder")}
@@ -193,6 +243,7 @@ export function ContactSection() {
                     </label>
                     <input
                       type="text"
+                      name="subject"
                       required
                       className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                       placeholder={t("form.subjectPlaceholder")}
@@ -204,6 +255,7 @@ export function ContactSection() {
                       {t("form.message")}
                     </label>
                     <textarea
+                      name="message"
                       required
                       rows={5}
                       className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"

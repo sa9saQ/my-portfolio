@@ -29,13 +29,10 @@ export function ProjectsPreview() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-primary text-sm font-medium uppercase tracking-wider">
-            {t("title")}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-2 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-2">
             {t("heading")}
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full" />
+          <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         {/* Projects Grid */}
