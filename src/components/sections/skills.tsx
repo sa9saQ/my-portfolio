@@ -60,9 +60,9 @@ function SkillBar({ skill, delay }: { skill: Skill; delay: number }) {
         <span className="font-medium">{skill.name}</span>
         <span className="text-muted-foreground">{skill.level}%</span>
       </div>
-      <div className="h-2 bg-muted rounded-full overflow-hidden">
+      <div className="h-2 bg-white/10 dark:bg-white/5 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-primary rounded-full"
+          className="h-full bg-gradient-to-r from-primary via-primary to-accent rounded-full"
           initial={{ width: 0 }}
           animate={isInView ? { width: `${skill.level}%` } : {}}
           transition={{ duration: 1, delay, ease: "easeOut" }}
@@ -79,10 +79,6 @@ export function SkillsSection() {
 
   return (
     <section id="skills" className="py-24 px-4 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -91,28 +87,29 @@ export function SkillsSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-2">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
             {t("heading")}
           </h2>
           <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.titleKey}
-              className="p-6 rounded-3xl bg-card border border-border hover:border-primary/30 transition-colors"
+              className="glass-card group"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: categoryIndex * 0.2 }}
+              whileHover={{ y: -5 }}
             >
               {/* Category Header */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-primary/10">
+                <div className="p-3 rounded-xl glass group-hover:glow-aurora transition-all duration-300">
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold">{t(category.titleKey)}</h3>
+                <h3 className="text-xl font-heading font-bold">{t(category.titleKey)}</h3>
               </div>
 
               {/* Skill Bars */}
@@ -129,7 +126,7 @@ export function SkillsSection() {
           ))}
         </div>
 
-        {/* Additional Tech Icons */}
+        {/* Additional Tech Tags */}
         <motion.div
           className="mt-16"
           initial={{ opacity: 0, y: 20 }}
@@ -139,7 +136,7 @@ export function SkillsSection() {
           <p className="text-center text-muted-foreground mb-8">
             {t("alsoExperienced")}
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3">
             {[
               "Vercel",
               "Notion",
@@ -152,11 +149,11 @@ export function SkillsSection() {
             ].map((tech, index) => (
               <motion.div
                 key={tech}
-                className="px-4 py-2 rounded-full bg-secondary text-sm font-medium"
+                className="px-4 py-2 rounded-full glass text-sm font-medium cursor-pointer hover:glow-aurora transition-all duration-300"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.3, delay: 1 + index * 0.05 }}
-                whileHover={{ scale: 1.1, backgroundColor: "hsl(var(--primary) / 0.2)" }}
+                whileHover={{ scale: 1.1 }}
               >
                 {tech}
               </motion.div>

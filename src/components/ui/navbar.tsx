@@ -52,21 +52,20 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isScrolled
-            ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-lg"
-            : "bg-transparent"
+          "fixed top-4 left-4 right-4 z-50 transition-all duration-300 glass-navbar",
+          isScrolled && "shadow-lg shadow-black/5"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
             <motion.a
               href="#home"
-              className="text-xl font-bold text-gradient"
+              className="text-xl font-heading font-bold text-aurora cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -97,28 +96,28 @@ export function Navbar() {
               <div className="relative">
                 <motion.button
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                  className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors flex items-center gap-1"
+                  className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <Globe className="w-5 h-5" />
-                  <span className="text-xs uppercase">{locale}</span>
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase">{locale}</span>
                 </motion.button>
 
                 <AnimatePresence>
                   {isLangMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 py-2 w-32 bg-card border border-border rounded-lg shadow-lg"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      className="absolute right-0 mt-2 py-2 w-32 glass rounded-xl shadow-lg"
                     >
                       {locales.map((loc) => (
                         <button
                           key={loc}
                           onClick={() => switchLocale(loc)}
                           className={cn(
-                            "w-full px-4 py-2 text-left text-sm hover:bg-secondary transition-colors",
+                            "w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors cursor-pointer",
                             locale === loc && "text-primary font-medium"
                           )}
                         >
@@ -134,53 +133,53 @@ export function Navbar() {
               {mounted && (
                 <motion.button
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                  className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                   whileHover={{ scale: 1.1, rotate: 15 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   {theme === "dark" ? (
-                    <Sun className="w-5 h-5" />
+                    <Sun className="w-4 h-4" />
                   ) : (
-                    <Moon className="w-5 h-5" />
+                    <Moon className="w-4 h-4" />
                   )}
                 </motion.button>
               )}
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4">
+            <div className="md:hidden flex items-center gap-3">
               {/* Language Switcher Mobile */}
               <motion.button
                 onClick={() => switchLocale(locale === "ja" ? "en" : "ja")}
-                className="p-2 rounded-full bg-secondary flex items-center gap-1"
+                className="p-2 rounded-full glass flex items-center gap-1 cursor-pointer"
                 whileTap={{ scale: 0.9 }}
               >
-                <Globe className="w-5 h-5" />
+                <Globe className="w-4 h-4" />
                 <span className="text-xs uppercase">{locale === "ja" ? "EN" : "JA"}</span>
               </motion.button>
 
               {mounted && (
                 <motion.button
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="p-2 rounded-full bg-secondary"
+                  className="p-2 rounded-full glass cursor-pointer"
                   whileTap={{ scale: 0.9 }}
                 >
                   {theme === "dark" ? (
-                    <Sun className="w-5 h-5" />
+                    <Sun className="w-4 h-4" />
                   ) : (
-                    <Moon className="w-5 h-5" />
+                    <Moon className="w-4 h-4" />
                   )}
                 </motion.button>
               )}
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2"
+                className="p-2 glass rounded-full cursor-pointer"
                 whileTap={{ scale: 0.9 }}
               >
                 {isMobileMenuOpen ? (
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 ) : (
-                  <Menu className="w-6 h-6" />
+                  <Menu className="w-5 h-5" />
                 )}
               </motion.button>
             </div>
@@ -195,14 +194,14 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-16 z-40 md:hidden bg-background/95 backdrop-blur-lg border-b border-border"
+            className="fixed inset-x-4 top-20 z-40 md:hidden glass rounded-2xl"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-6 py-6 space-y-4">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  className="block w-full text-left text-lg text-muted-foreground hover:text-foreground transition-colors"
+                  className="block w-full text-left text-lg text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
