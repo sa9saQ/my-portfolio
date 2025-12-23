@@ -122,11 +122,14 @@ export function ContactSection() {
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={info.label}
-                  className="flex items-center gap-4 p-4 glass-card cursor-pointer"
+                  className={cn(
+                    "flex items-center gap-4 p-4 glass-card",
+                    info.href && "cursor-pointer"
+                  )}
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ x: 10 }}
+                  whileHover={info.href ? { x: 10 } : {}}
                 >
                   <div className="p-3 rounded-xl glass">
                     <info.icon className="w-6 h-6 text-primary" />

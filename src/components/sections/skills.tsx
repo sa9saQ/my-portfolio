@@ -149,11 +149,10 @@ export function SkillsSection() {
             ].map((tech, index) => (
               <motion.div
                 key={tech}
-                className="px-4 py-2 rounded-full glass text-sm font-medium cursor-pointer hover:glow-aurora transition-all duration-300"
+                className="px-4 py-2 rounded-full glass text-sm font-medium hover:glow-aurora transition-all duration-300"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.3, delay: 1 + index * 0.05 }}
-                whileHover={{ scale: 1.1 }}
               >
                 {tech}
               </motion.div>
