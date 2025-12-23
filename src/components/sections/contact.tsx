@@ -19,6 +19,9 @@ const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ID
   ? `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`
   : null;
 
+const inputClassName =
+  "w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50";
+
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -220,7 +223,7 @@ export function ContactSection() {
                         type="text"
                         name="name"
                         required
-                        className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                        className={inputClassName}
                         placeholder={t("form.namePlaceholder")}
                       />
                     </div>
@@ -232,7 +235,7 @@ export function ContactSection() {
                         type="email"
                         name="email"
                         required
-                        className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                        className={inputClassName}
                         placeholder={t("form.emailPlaceholder")}
                       />
                     </div>
@@ -246,7 +249,7 @@ export function ContactSection() {
                       type="text"
                       name="subject"
                       required
-                      className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                      className={inputClassName}
                       placeholder={t("form.subjectPlaceholder")}
                     />
                   </div>
@@ -259,7 +262,7 @@ export function ContactSection() {
                       name="message"
                       required
                       rows={5}
-                      className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all resize-none placeholder:text-muted-foreground/50"
+                      className={cn(inputClassName, "resize-none")}
                       placeholder={t("form.messagePlaceholder")}
                     />
                   </div>
