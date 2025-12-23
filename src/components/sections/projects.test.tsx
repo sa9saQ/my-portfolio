@@ -38,11 +38,11 @@ vi.mock("@/data/projects", () => ({
   projects: [
     {
       id: 1,
-      title: "Test Project",
-      description: "Test description",
+      titleKey: "items.test.title",
+      descriptionKey: "items.test.description",
       category: "web",
       image: "/test.png",
-      gradient: "from-blue-500 to-purple-500",
+      color: "from-blue-500 to-purple-500",
       tags: ["React", "TypeScript"],
       github: "https://github.com/test",
       demo: "https://test.com",

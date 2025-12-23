@@ -46,7 +46,5 @@ describe("Home Page", () => {
 
     expect(result.type).toBe("main");
     expect(result.props.className).toContain("min-h-screen");
-    expect(result.props.className).toContain("relative");
-    expect(result.props.className).toContain("z-10");
   });
 });

@@ -217,7 +217,7 @@ export function ContactSection() {
                         type="text"
                         name="name"
                         required
-                        className="w-full px-4 py-3 rounded-xl glass border-0 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                        className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
                         placeholder={t("form.namePlaceholder")}
                       />
                     </div>
@@ -229,7 +229,7 @@ export function ContactSection() {
                         type="email"
                         name="email"
                         required
-                        className="w-full px-4 py-3 rounded-xl glass border-0 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                        className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
                         placeholder={t("form.emailPlaceholder")}
                       />
                     </div>
@@ -243,7 +243,7 @@ export function ContactSection() {
                       type="text"
                       name="subject"
                       required
-                      className="w-full px-4 py-3 rounded-xl glass border-0 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all placeholder:text-muted-foreground/50"
+                      className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50"
                       placeholder={t("form.subjectPlaceholder")}
                     />
                   </div>
@@ -256,7 +256,7 @@ export function ContactSection() {
                       name="message"
                       required
                       rows={5}
-                      className="w-full px-4 py-3 rounded-xl glass border-0 focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all resize-none placeholder:text-muted-foreground/50"
+                      className="w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all resize-none placeholder:text-muted-foreground/50"
                       placeholder={t("form.messagePlaceholder")}
                     />
                   </div>
