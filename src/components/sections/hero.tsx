@@ -82,7 +82,7 @@ export function HeroSection() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(168, 85, 247, ${p.opacity})`;
+        ctx.fillStyle = `rgba(249, 115, 22, ${p.opacity})`;
         ctx.fill();
 
         particles.slice(i + 1).forEach((p2) => {
@@ -94,7 +94,7 @@ export function HeroSection() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(168, 85, 247, ${0.15 * (1 - dist / 120)})`;
+            ctx.strokeStyle = `rgba(249, 115, 22, ${0.12 * (1 - dist / 120)})`;
             ctx.stroke();
           }
         });

@@ -4,35 +4,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --background: 60 9% 98%;
+    --foreground: 20 14% 10%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 60 9% 98%;
+    --secondary: 45 93% 94%;
+    --secondary-foreground: 20 14% 10%;
+    --muted: 45 30% 90%;
+    --muted-foreground: 20 10% 40%;
+    --accent: 173 80% 40%;
+    --accent-foreground: 60 9% 98%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --border: 240 5.9% 90%;
+    --card-foreground: 20 14% 10%;
+    --border: 45 20% 85%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --card: 240 10% 6%;
-    --card-foreground: 0 0% 98%;
-    --border: 240 3.7% 20%;
+    --background: 220 20% 8%;
+    --foreground: 60 9% 98%;
+    --primary: 24 100% 55%;
+    --primary-foreground: 220 20% 8%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 60 9% 98%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 173 80% 45%;
+    --accent-foreground: 220 20% 8%;
+    --card: 220 18% 11%;
+    --card-foreground: 60 9% 98%;
+    --border: 220 15% 20%;
   }
 }
 
@@ -52,19 +52,11 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 bg-clip-text text-transparent;
   }
 
   .bg-gradient-radial {
     background: radial-gradient(circle at center, var(--tw-gradient-stops));
-  }
-
-  .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
-  }
-
-  .glass-dark {
-    @apply bg-black/20 backdrop-blur-lg border border-white/10;
   }
 }
 

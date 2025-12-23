@@ -107,7 +107,8 @@
       "messagePlaceholder": "Feel free to send a message...",
       "send": "Send Message",
       "sent": "Message Sent!",
-      "sentMessage": "Thank you for reaching out. I'll get back to you soon!"
+      "sentMessage": "Thank you for reaching out. I'll get back to you soon!",
+      "error": "Failed to send. Please contact me directly via email."
     }
   },
   "footer": {
