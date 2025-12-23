@@ -55,6 +55,9 @@ vi.mock("framer-motion", () => ({
   ),
 }));
 
+// Preserve original fetch to avoid cross-test pollution
+const originalFetch = global.fetch;
+
 describe("ContactSection", () => {
   const originalLocation = window.location;
   let originalFormspreeId: string | undefined;
@@ -76,6 +79,8 @@ describe("ContactSection", () => {
     } else {
       process.env.NEXT_PUBLIC_FORMSPREE_ID = originalFormspreeId;
     }
+    // Restore fetch mock
+    global.fetch = originalFetch;
     // Reset modules to ensure clean state
     vi.resetModules();
   });

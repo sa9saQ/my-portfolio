@@ -75,7 +75,7 @@ export function ContactSection() {
       });
 
       if (!response.ok) {
-        throw new Error("送信に失敗しました");
+        throw new Error();
       }
 
       setIsSubmitted(true);
