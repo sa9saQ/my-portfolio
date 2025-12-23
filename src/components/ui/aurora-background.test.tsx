@@ -61,7 +61,7 @@ describe("AuroraBackground", () => {
   it("has fixed positioning class", () => {
     render(<AuroraBackground />);
     const canvas = document.querySelector("canvas");
-    expect(canvas).toHaveClass("fixed", "inset-0", "-z-10");
+    expect(canvas).toHaveClass("fixed", "inset-0", "z-[1]");
   });
 
   it("has pointer-events-none to not block interactions", () => {
