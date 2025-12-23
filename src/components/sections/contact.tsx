@@ -279,17 +279,17 @@ export function ContactSection() {
                     whileHover={isSubmitting ? {} : { scale: 1.02 }}
                     whileTap={isSubmitting ? {} : { scale: 0.98 }}
                   >
-                    <span className="absolute inset-0 bg-primary/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="absolute inset-0 bg-primary/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
                     {isSubmitting ? (
                       <motion.div
-                        className="relative w-6 h-6 border-2 border-white/30 border-t-white rounded-full"
+                        className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full"
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       />
                     ) : (
                       <>
-                        <Send className="relative w-5 h-5" />
-                        <span className="relative">{t("form.send")}</span>
+                        <Send className="w-5 h-5" />
+                        <span>{t("form.send")}</span>
                       </>
                     )}
                   </motion.button>

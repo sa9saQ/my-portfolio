@@ -153,6 +153,7 @@ export function SkillsSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.3, delay: 1 + index * 0.05 }}
+                whileHover={{ scale: 1.05 }}
               >
                 {tech}
               </motion.div>
