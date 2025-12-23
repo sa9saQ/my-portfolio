@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ContactSection } from "./contact";
 
@@ -56,8 +56,17 @@ vi.mock("framer-motion", () => ({
 }));
 
 describe("ContactSection", () => {
+  const originalLocation = window.location;
+
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalLocation,
+    });
   });
 
   it("renders contact form with all fields", () => {
@@ -141,6 +150,7 @@ describe("ContactSection", () => {
 
     const mockLocation = { href: "" };
     Object.defineProperty(window, "location", {
+      configurable: true,
       value: mockLocation,
       writable: true,
     });
