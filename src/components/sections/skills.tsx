@@ -60,7 +60,7 @@ function SkillBar({ skill, delay }: { skill: Skill; delay: number }) {
         <span className="font-medium">{skill.name}</span>
         <span className="text-muted-foreground">{skill.level}%</span>
       </div>
-      <div className="h-2 bg-white/10 dark:bg-white/5 rounded-full overflow-hidden">
+      <div className="h-2 bg-muted rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-primary via-primary to-accent rounded-full"
           initial={{ width: 0 }}
