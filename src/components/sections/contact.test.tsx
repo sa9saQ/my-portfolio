@@ -115,8 +115,9 @@ describe("ContactSection", () => {
 
     // Need to re-import to pick up env change
     vi.resetModules();
+    const { ContactSection: ReloadedContactSection } = await import("./contact");
 
-    render(<ContactSection />);
+    render(<ReloadedContactSection />);
 
     const submitButton = screen.getByRole("button", { name: /送信する/i });
     fireEvent.click(submitButton);
@@ -129,10 +130,14 @@ describe("ContactSection", () => {
     process.env.NEXT_PUBLIC_FORMSPREE_ID = originalEnv;
   });
 
-  it("falls back to mailto when Formspree is not configured", () => {
+  it("falls back to mailto when Formspree is not configured", async () => {
     // Ensure FORMSPREE_ENDPOINT is not set
     const originalEnv = process.env.NEXT_PUBLIC_FORMSPREE_ID;
     delete process.env.NEXT_PUBLIC_FORMSPREE_ID;
+
+    // Need to re-import to pick up env change
+    vi.resetModules();
+    const { ContactSection: ReloadedContactSection } = await import("./contact");
 
     const mockLocation = { href: "" };
     Object.defineProperty(window, "location", {
@@ -140,7 +145,7 @@ describe("ContactSection", () => {
       writable: true,
     });
 
-    render(<ContactSection />);
+    render(<ReloadedContactSection />);
 
     // Fill out the form
     fireEvent.change(screen.getByPlaceholderText("お名前"), {

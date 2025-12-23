@@ -54,5 +54,7 @@ describe("ProjectsPreview", () => {
   it("renders first 3 projects", () => {
     render(<ProjectsPreview />);
     expect(screen.getByText("学園ホームページ")).toBeInTheDocument();
+    expect(screen.getByText("AIチャットボット")).toBeInTheDocument();
+    expect(screen.getByText("ポートフォリオサイト")).toBeInTheDocument();
   });
 });
