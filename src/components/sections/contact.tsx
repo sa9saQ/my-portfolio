@@ -61,6 +61,7 @@ export function ContactSection() {
       const mailtoUrl = `mailto:yizhix797@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
       window.location.href = mailtoUrl;
       setIsSubmitting(false);
+      setIsSubmitted(true);
       return;
     }
 

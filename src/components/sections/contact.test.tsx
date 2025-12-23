@@ -57,16 +57,27 @@ vi.mock("framer-motion", () => ({
 
 describe("ContactSection", () => {
   const originalLocation = window.location;
+  let originalFormspreeId: string | undefined;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    originalFormspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
   });
 
   afterEach(() => {
+    // Restore window.location
     Object.defineProperty(window, "location", {
       configurable: true,
       value: originalLocation,
     });
+    // Restore environment variable
+    if (originalFormspreeId === undefined) {
+      delete process.env.NEXT_PUBLIC_FORMSPREE_ID;
+    } else {
+      process.env.NEXT_PUBLIC_FORMSPREE_ID = originalFormspreeId;
+    }
+    // Reset modules to ensure clean state
+    vi.resetModules();
   });
 
   it("renders contact form with all fields", () => {
@@ -119,7 +130,6 @@ describe("ContactSection", () => {
     global.fetch = mockFetch;
 
     // Set FORMSPREE_ENDPOINT via env
-    const originalEnv = process.env.NEXT_PUBLIC_FORMSPREE_ID;
     process.env.NEXT_PUBLIC_FORMSPREE_ID = "test123";
 
     // Need to re-import to pick up env change
@@ -135,13 +145,10 @@ describe("ContactSection", () => {
     await waitFor(() => {
       expect(submitButton).toBeDisabled();
     });
-
-    process.env.NEXT_PUBLIC_FORMSPREE_ID = originalEnv;
   });
 
   it("falls back to mailto when Formspree is not configured", async () => {
     // Ensure FORMSPREE_ENDPOINT is not set
-    const originalEnv = process.env.NEXT_PUBLIC_FORMSPREE_ID;
     delete process.env.NEXT_PUBLIC_FORMSPREE_ID;
 
     // Need to re-import to pick up env change
@@ -177,9 +184,50 @@ describe("ContactSection", () => {
     const form = screen.getByRole("button", { name: /送信する/i }).closest("form");
     fireEvent.submit(form!);
 
-    // Should redirect to mailto
-    expect(mockLocation.href).toContain("mailto:yizhix797@gmail.com");
+    // Should redirect to mailto and show success
+    await waitFor(() => {
+      expect(mockLocation.href).toContain("mailto:yizhix797@gmail.com");
+      expect(screen.getByText("送信完了！")).toBeInTheDocument();
+    });
+  });
 
-    process.env.NEXT_PUBLIC_FORMSPREE_ID = originalEnv;
+  it("shows error message when Formspree request fails", async () => {
+    // Mock fetch to fail
+    const mockFetch = vi.fn().mockRejectedValue(new Error("Network error"));
+    global.fetch = mockFetch;
+
+    // Set FORMSPREE_ENDPOINT
+    process.env.NEXT_PUBLIC_FORMSPREE_ID = "test123";
+
+    // Need to re-import to pick up env change
+    vi.resetModules();
+    const { ContactSection: ReloadedContactSection } = await import("./contact");
+
+    render(<ReloadedContactSection />);
+
+    // Fill out the form
+    fireEvent.change(screen.getByPlaceholderText("お名前"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("your@email.com"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("ご用件は？"), {
+      target: { value: "テスト件名" },
+    });
+    fireEvent.change(
+      screen.getByPlaceholderText("お気軽にメッセージをどうぞ..."),
+      {
+        target: { value: "テストメッセージ" },
+      }
+    );
+
+    const form = screen.getByRole("button", { name: /送信する/i }).closest("form");
+    fireEvent.submit(form!);
+
+    // Should show error message with AlertCircle icon
+    await waitFor(() => {
+      expect(screen.getByText("送信に失敗しました。")).toBeInTheDocument();
+    });
   });
 });
