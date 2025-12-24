@@ -128,7 +128,7 @@ export function Navbar() {
 
               {/* Theme Toggle */}
               <motion.button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() => mounted && setTheme(theme === "dark" ? "light" : "dark")}
                 className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                 whileHover={{ scale: 1.1, rotate: 15 }}
                 whileTap={{ scale: 0.9 }}
@@ -154,7 +154,7 @@ export function Navbar() {
               </motion.button>
 
               <motion.button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() => mounted && setTheme(theme === "dark" ? "light" : "dark")}
                 className="p-2 rounded-full glass cursor-pointer"
                 whileTap={{ scale: 0.9 }}
               >
