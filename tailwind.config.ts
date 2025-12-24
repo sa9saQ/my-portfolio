@@ -7,6 +7,12 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "hidden",
+    "flex",
+    "md:flex",
+    "md:hidden",
+  ],
   theme: {
     extend: {
       colors: {
