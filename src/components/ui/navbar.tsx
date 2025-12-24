@@ -70,17 +70,7 @@ export function Navbar() {
             </motion.a>
 
             {/* Desktop Navigation */}
-            <div
-              className="items-center gap-6 lg:gap-8"
-              style={{ display: 'none' }}
-              id="desktop-nav"
-            >
-              <style>{`
-                @media (min-width: 768px) {
-                  #desktop-nav { display: flex !important; }
-                  #mobile-nav { display: none !important; }
-                }
-              `}</style>
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <motion.button
                   key={item.name}
@@ -152,7 +142,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex items-center gap-2" id="mobile-nav">
+            <div className="flex md:hidden items-center gap-2">
               {/* Language Switcher Mobile */}
               <motion.button
                 onClick={() => switchLocale(locale === "ja" ? "en" : "ja")}
