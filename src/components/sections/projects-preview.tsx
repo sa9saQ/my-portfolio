@@ -20,7 +20,7 @@ export function ProjectsPreview() {
   const previewProjects = projects.slice(0, PREVIEW_COUNT);
 
   return (
-    <section id="projects" className="py-24 px-4">
+    <section id="projects" className="py-16 sm:py-24 px-4">
       <div ref={ref} className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -149,14 +149,14 @@ export function ProjectsPreview() {
 
         {/* View All Button */}
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-8 sm:mt-12 px-4 sm:px-0"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <Link href="/projects">
+          <Link href="/projects" className="block sm:inline-block">
             <motion.span
-              className="relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-medium overflow-hidden group cursor-pointer"
+              className="relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-medium overflow-hidden group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

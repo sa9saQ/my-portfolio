@@ -23,10 +23,13 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden pt-24 sm:pt-28 pb-8"
     >
       {/* Gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background z-10 pointer-events-none" />
+
+      {/* Top spacer for balanced layout */}
+      <div className="flex-shrink-0" />
 
       <div className="relative z-20 text-center px-4 max-w-4xl">
         <motion.div
@@ -66,7 +69,7 @@ export function HeroSection() {
 
           {/* Social Links with Glass effect */}
           <motion.div
-            className="flex items-center justify-center gap-4 mb-12"
+            className="flex items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-12"
             initial={mounted ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -77,19 +80,19 @@ export function HeroSection() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
+                className="p-3 sm:p-4 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                 whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={link.label}
               >
-                <link.icon className="w-6 h-6" />
+                <link.icon className="w-5 h-5 sm:w-6 sm:h-6" />
               </motion.a>
             ))}
           </motion.div>
 
           {/* CTA Buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0"
             initial={mounted ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
@@ -97,7 +100,7 @@ export function HeroSection() {
             {/* Primary CTA with Glow */}
             <motion.a
               href="#projects"
-              className="relative px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-medium overflow-hidden group cursor-pointer"
+              className="relative w-full sm:w-auto min-w-[200px] px-8 py-4 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-medium text-center overflow-hidden group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -108,7 +111,7 @@ export function HeroSection() {
             {/* Secondary CTA with Glass */}
             <motion.a
               href="#contact"
-              className="px-8 py-3.5 rounded-full glass font-medium hover:glow-aurora transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto min-w-[200px] px-8 py-4 sm:py-3.5 rounded-full glass font-medium text-center hover:glow-aurora transition-all duration-300 cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -118,20 +121,20 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - minimal design for visual balance */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        initial={mounted ? { opacity: 0, y: -20 } : false}
-        animate={{ opacity: 1, y: 0 }}
+        className="relative z-20 flex-shrink-0"
+        initial={mounted ? { opacity: 0 } : false}
+        animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
       >
         <motion.a
           href="#about"
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          animate={{ y: [0, 8, 0] }}
+          className="flex items-center justify-center w-10 h-10 rounded-full glass text-muted-foreground hover:text-foreground hover:glow-aurora transition-all duration-300 cursor-pointer"
+          animate={{ y: [0, 6, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          whileHover={{ scale: 1.1 }}
         >
-          <span className="text-sm font-medium">{t("scrollDown")}</span>
           <ArrowDown className="w-5 h-5" />
         </motion.a>
       </motion.div>

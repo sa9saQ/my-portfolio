@@ -90,7 +90,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 relative overflow-hidden">
+    <section id="contact" className="py-16 sm:py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -187,7 +187,7 @@ export function ContactSection() {
           >
             <form
               onSubmit={handleSubmit}
-              className="p-8 rounded-2xl glass space-y-6"
+              className="p-5 sm:p-8 rounded-2xl glass space-y-4 sm:space-y-6"
             >
               {isSubmitted ? (
                 <motion.div
