@@ -34,7 +34,7 @@ export function AboutSection() {
   ];
 
   return (
-    <section id="about" className="py-24 px-4 relative overflow-hidden">
+    <section id="about" className="py-16 sm:py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-16"
@@ -96,9 +96,9 @@ export function AboutSection() {
                   transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <feature.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-all duration-300" />
-                  <h4 className="font-heading font-semibold mb-2">{feature.title}</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-all duration-300" />
+                  <h4 className="font-heading font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{feature.title}</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {feature.description}
                   </p>
                 </motion.div>

@@ -78,7 +78,7 @@ export function SkillsSection() {
   const t = useTranslations("skills");
 
   return (
-    <section id="skills" className="py-24 px-4 relative overflow-hidden">
+    <section id="skills" className="py-16 sm:py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -136,7 +136,7 @@ export function SkillsSection() {
           <p className="text-center text-muted-foreground mb-8">
             {t("alsoExperienced")}
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {[
               "Vercel",
               "Notion",
@@ -149,7 +149,7 @@ export function SkillsSection() {
             ].map((tech, index) => (
               <motion.div
                 key={tech}
-                className="px-4 py-2 rounded-full glass text-sm font-medium hover:border-primary/30 transition-all duration-300"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass text-xs sm:text-sm font-medium hover:border-primary/30 transition-all duration-300"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.3, delay: 1 + index * 0.05 }}

@@ -51,12 +51,9 @@ export function Navbar() {
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      <nav
         className={cn(
-          "fixed top-4 left-4 right-4 z-50 transition-all duration-300 glass-navbar",
+          "fixed top-4 left-4 right-4 z-50 transition-all duration-300 glass-navbar navbar-fallback",
           isScrolled && "shadow-lg shadow-black/5"
         )}
       >
@@ -73,7 +70,17 @@ export function Navbar() {
             </motion.a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            <div
+              className="items-center gap-6 lg:gap-8"
+              style={{ display: 'none' }}
+              id="desktop-nav"
+            >
+              <style>{`
+                @media (min-width: 768px) {
+                  #desktop-nav { display: flex !important; }
+                  #mobile-nav { display: none !important; }
+                }
+              `}</style>
               {navItems.map((item) => (
                 <motion.button
                   key={item.name}
@@ -130,24 +137,22 @@ export function Navbar() {
               </div>
 
               {/* Theme Toggle */}
-              {mounted && (
-                <motion.button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
-                  whileHover={{ scale: 1.1, rotate: 15 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {theme === "dark" ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
-                </motion.button>
-              )}
+              <motion.button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
+                whileHover={{ scale: 1.1, rotate: 15 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {mounted ? (
+                  theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />
+                ) : (
+                  <Sun className="w-4 h-4" />
+                )}
+              </motion.button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-3">
+            <div className="flex items-center gap-2" id="mobile-nav">
               {/* Language Switcher Mobile */}
               <motion.button
                 onClick={() => switchLocale(locale === "ja" ? "en" : "ja")}
@@ -158,19 +163,17 @@ export function Navbar() {
                 <span className="text-xs uppercase">{locale === "ja" ? "EN" : "JA"}</span>
               </motion.button>
 
-              {mounted && (
-                <motion.button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="p-2 rounded-full glass cursor-pointer"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {theme === "dark" ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
-                </motion.button>
-              )}
+              <motion.button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-2 rounded-full glass cursor-pointer"
+                whileTap={{ scale: 0.9 }}
+              >
+                {mounted ? (
+                  theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />
+                ) : (
+                  <Sun className="w-4 h-4" />
+                )}
+              </motion.button>
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 glass rounded-full cursor-pointer"
@@ -185,7 +188,7 @@ export function Navbar() {
             </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
