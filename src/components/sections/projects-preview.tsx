@@ -20,7 +20,7 @@ export function ProjectsPreview() {
   const previewProjects = projects.slice(0, PREVIEW_COUNT);
 
   return (
-    <section id="projects" className="py-24 px-4 bg-secondary/30">
+    <section id="projects" className="py-24 px-4">
       <div ref={ref} className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -29,28 +29,29 @@ export function ProjectsPreview() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-2">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
             {t("heading")}
           </h2>
           <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {previewProjects.map((project, index) => (
             <motion.div
               key={project.id}
-              className="group relative"
+              className="group relative cursor-pointer"
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
+              whileHover={{ y: -8 }}
             >
               <div
                 className={cn(
-                  "relative rounded-3xl overflow-hidden bg-card border border-border transition-all duration-500",
-                  hoveredProject === project.id && "border-primary/50 shadow-2xl shadow-primary/10"
+                  "relative rounded-2xl overflow-hidden glass transition-all duration-500",
+                  hoveredProject === project.id && "glow-aurora"
                 )}
               >
                 {/* Project Image/Gradient */}
@@ -85,7 +86,7 @@ export function ProjectsPreview() {
 
                   {/* Hover Overlay */}
                   <motion.div
-                    className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center gap-4"
+                    className="absolute inset-0 glass flex items-center justify-center gap-4"
                     initial={{ opacity: 0 }}
                     animate={{
                       opacity: hoveredProject === project.id ? 1 : 0,
@@ -97,7 +98,7 @@ export function ProjectsPreview() {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 rounded-full bg-card border border-border hover:border-primary transition-colors"
+                        className="p-3 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -109,7 +110,7 @@ export function ProjectsPreview() {
                         href={project.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 rounded-full bg-primary text-primary-foreground"
+                        className="p-3 rounded-full bg-primary text-primary-foreground glow-primary cursor-pointer"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -121,7 +122,7 @@ export function ProjectsPreview() {
 
                 {/* Project Info */}
                 <div className="p-5">
-                  <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                  <h3 className="text-lg font-heading font-bold mb-2 flex items-center gap-2">
                     {t(project.titleKey)}
                     <ChevronRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
@@ -134,7 +135,7 @@ export function ProjectsPreview() {
                     {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-0.5 text-xs rounded-full bg-secondary text-muted-foreground"
+                        className="px-2.5 py-1 text-xs rounded-full glass text-muted-foreground"
                       >
                         {tag}
                       </span>
@@ -155,12 +156,13 @@ export function ProjectsPreview() {
         >
           <Link href="/projects">
             <motion.span
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+              className="relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-medium overflow-hidden group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {t("viewAll")}
-              <ArrowRight className="w-5 h-5" />
+              <span className="absolute inset-0 bg-primary/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="relative">{t("viewAll")}</span>
+              <ArrowRight className="relative w-5 h-5" />
             </motion.span>
           </Link>
         </motion.div>

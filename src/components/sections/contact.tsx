@@ -19,6 +19,9 @@ const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ID
   ? `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`
   : null;
 
+const inputClassName =
+  "w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50";
+
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -87,10 +90,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-24 px-4 bg-secondary/30 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl" />
-
+    <section id="contact" className="py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -99,7 +99,7 @@ export function ContactSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-2">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
             {t("heading")}
           </h2>
           <p className="text-muted-foreground text-lg">{t("title")}</p>
@@ -114,7 +114,7 @@ export function ContactSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div>
-              <h3 className="text-2xl font-bold mb-4">{t("heading")}</h3>
+              <h3 className="text-2xl font-heading font-bold mb-4">{t("heading")}</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {t("description")}
               </p>
@@ -125,13 +125,16 @@ export function ContactSection() {
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={info.label}
-                  className="flex items-center gap-4 p-4 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors"
+                  className={cn(
+                    "flex items-center gap-4 p-4 glass-card",
+                    info.href && "cursor-pointer"
+                  )}
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ x: 10 }}
+                  whileHover={info.href ? { x: 10 } : {}}
                 >
-                  <div className="p-3 rounded-xl bg-primary/10">
+                  <div className="p-3 rounded-xl glass">
                     <info.icon className="w-6 h-6 text-primary" />
                   </div>
                   <div>
@@ -161,7 +164,7 @@ export function ContactSection() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                    className="p-4 rounded-2xl glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
@@ -184,7 +187,7 @@ export function ContactSection() {
           >
             <form
               onSubmit={handleSubmit}
-              className="p-8 rounded-3xl bg-card border border-border space-y-6"
+              className="p-8 rounded-2xl glass space-y-6"
             >
               {isSubmitted ? (
                 <motion.div
@@ -220,7 +223,7 @@ export function ContactSection() {
                         type="text"
                         name="name"
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        className={inputClassName}
                         placeholder={t("form.namePlaceholder")}
                       />
                     </div>
@@ -232,7 +235,7 @@ export function ContactSection() {
                         type="email"
                         name="email"
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        className={inputClassName}
                         placeholder={t("form.emailPlaceholder")}
                       />
                     </div>
@@ -246,7 +249,7 @@ export function ContactSection() {
                       type="text"
                       name="subject"
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      className={inputClassName}
                       placeholder={t("form.subjectPlaceholder")}
                     />
                   </div>
@@ -259,7 +262,7 @@ export function ContactSection() {
                       name="message"
                       required
                       rows={5}
-                      className="w-full px-4 py-3 rounded-xl bg-secondary border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                      className={cn(inputClassName, "resize-none")}
                       placeholder={t("form.messagePlaceholder")}
                     />
                   </div>
@@ -268,7 +271,7 @@ export function ContactSection() {
                     type="submit"
                     disabled={isSubmitting}
                     className={cn(
-                      "w-full py-4 rounded-xl bg-primary text-primary-foreground font-medium flex items-center justify-center gap-2 transition-all",
+                      "relative w-full py-4 rounded-xl bg-primary text-primary-foreground font-medium flex items-center justify-center gap-2 transition-all overflow-hidden group cursor-pointer",
                       isSubmitting
                         ? "opacity-70 cursor-not-allowed"
                         : "hover:shadow-lg hover:shadow-primary/25"
@@ -276,6 +279,7 @@ export function ContactSection() {
                     whileHover={isSubmitting ? {} : { scale: 1.02 }}
                     whileTap={isSubmitting ? {} : { scale: 0.98 }}
                   >
+                    <span className="absolute inset-0 bg-primary/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
                     {isSubmitting ? (
                       <motion.div
                         className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full"
@@ -285,7 +289,7 @@ export function ContactSection() {
                     ) : (
                       <>
                         <Send className="w-5 h-5" />
-                        {t("form.send")}
+                        <span>{t("form.send")}</span>
                       </>
                     )}
                   </motion.button>
