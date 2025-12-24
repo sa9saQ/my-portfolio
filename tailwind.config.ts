@@ -12,6 +12,8 @@ const config: Config = {
     "flex",
     "md:flex",
     "md:hidden",
+    "md:!flex",
+    "md:!hidden",
   ],
   theme: {
     extend: {

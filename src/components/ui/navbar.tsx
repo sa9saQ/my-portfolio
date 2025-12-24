@@ -70,7 +70,7 @@ export function Navbar() {
             </motion.a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
+            <div className="hidden md:!flex items-center gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <motion.button
                   key={item.name}
@@ -142,7 +142,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center gap-2">
+            <div className="flex md:!hidden items-center gap-2">
               {/* Language Switcher Mobile */}
               <motion.button
                 onClick={() => switchLocale(locale === "ja" ? "en" : "ja")}
@@ -187,7 +187,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 top-20 z-40 md:hidden glass rounded-2xl"
+            className="fixed inset-x-4 top-20 z-40 md:!hidden glass rounded-2xl"
           >
             <div className="px-6 py-6 space-y-4">
               {navItems.map((item, index) => (
