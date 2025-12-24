@@ -8,10 +8,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
-    "hidden",
-    "flex",
-    "md:flex",
-    "md:hidden",
+    // Responsive visibility classes with !important for production reliability
     "md:!flex",
     "md:!hidden",
   ],
