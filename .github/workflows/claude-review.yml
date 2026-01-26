@@ -1,161 +1,88 @@
 # Claude Code GitHub Action Template
-# PRの自動レビュー、Issue対応、セキュリティ監査
+# PRの自動レビュー、@claude mention対応
 #
-# ⚠️⚠️⚠️ 2026-01-24 現在、完全に無効化中 ⚠️⚠️⚠️
+# 使い方:
+# 1. このファイルを .github/workflows/claude.yml にコピー
+# 2. リポジトリのSecrets に ANTHROPIC_API_KEY を設定
 #
-# 理由: SDK 0.2.15 のAJVバグにより、アクションバージョンに関係なく
-#       全てのリクエストが即座にクラッシュします（コスト$0、レビュー投稿なし）
-#
-# 関連Issue:
-# - #852: SDK 0.2.15 AJV検証エラー（P1）
-# - #856: 非推奨の権限構文（P1）
-# - #853: 間欠的なSDKクラッシュ（P1）
-#
-# 進捗確認: https://github.com/anthropics/claude-code-action/issues
-# 修正されたらこのファイルの `if: false` を削除してください。
-#
-# 代替: CodeRabbit, GitHub Copilot, GPT Code Review は動作中
+# 設定手順:
+# - Settings → Secrets and variables → Actions → New repository secret
+# - Name: ANTHROPIC_API_KEY
+# - Value: sk-ant-api03-... (Anthropic APIキー)
 
-name: Claude Code Automation (DISABLED)
+name: Claude Code Review
 
 on:
-  # PRへのコメント（@claude mentionで発火）
-  issue_comment:
-    types: [created]
-
-  # PR作成/更新時
+  # PR作成/更新時に自動レビュー
   pull_request:
     types: [opened, synchronize, reopened]
 
-  # Issue割り当て時
-  issues:
-    types: [assigned]
+  # PRコメントで @claude mention
+  issue_comment:
+    types: [created]
 
-  # 手動トリガー
-  workflow_dispatch:
-    inputs:
-      task:
-        description: 'Task for Claude to perform'
-        required: true
-        type: string
+  # Issueコメントで @claude mention
+  pull_request_review_comment:
+    types: [created]
 
-# 権限設定
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   issues: write
-  id-token: write
 
 jobs:
-  # @claude mention対応
-  # ⚠️ DISABLED: SDK 0.2.15 bug - uncomment when fixed
-  respond-to-mention:
-    if: false  # DISABLED - SDK bug
-    # Original condition:
-    # if: >
-    #   github.event_name == 'issue_comment' &&
-    #   contains(github.event.comment.body, '@claude')
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Claude Code Response
-        # v1.0.31 にピン留め（SDK 0.2.15 バグ回避）
-        uses: anthropics/claude-code-action@96c48f49664faa0b49df7e1c6d63689fffb4700c
-        continue-on-error: true
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  # PRレビュー
-  # ⚠️ DISABLED: SDK 0.2.15 bug - uncomment when fixed
-  pr-review:
-    if: false  # DISABLED - SDK bug
-    # Original: if: github.event_name == 'pull_request'
+  # PR自動レビュー
+  review:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Claude Code Review
-        # v1.0.31 にピン留め（SDK 0.2.15 バグ回避）
-        uses: anthropics/claude-code-action@96c48f49664faa0b49df7e1c6d63689fffb4700c
-        continue-on-error: true
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prompt: |
-            Review this PR focusing on:
-            1. Security issues (hardcoded secrets, injection, auth bypass)
-            2. Bugs (null refs, race conditions, logic errors)
-            3. Critical code quality issues
+          model: claude-opus-4-5-20251101
 
-            Post your review as a PR comment.
-
-            Output format:
-            ## Summary
-            [1-2 sentence summary]
-
-            ## Issues Found
-            | Severity | File | Issue | Fix |
-            |----------|------|-------|-----|
-
-            ## Recommendation
-            ✅ APPROVE / ⚠️ REQUEST CHANGES / ❌ BLOCK
-
-  # Issue自動実装
-  # ⚠️ DISABLED: SDK 0.2.15 bug - uncomment when fixed
-  auto-implement:
-    if: false  # DISABLED - SDK bug
-    # Original condition:
-    # if: >
-    #   github.event_name == 'issues' &&
-    #   github.event.action == 'assigned' &&
-    #   github.event.assignee.login == 'claude-code[bot]'
+  # @claude mention対応（PRコメント）
+  respond-pr-comment:
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Claude Code Implementation
-        # v1.0.31 にピン留め（SDK 0.2.15 バグ回避）
-        uses: anthropics/claude-code-action@96c48f49664faa0b49df7e1c6d63689fffb4700c
-        continue-on-error: true
+      - name: Claude Code Response
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prompt: |
-            Implement the feature/fix described in this issue.
-            1. Read existing code patterns
-            2. Implement with proper error handling
-            3. Create a PR with description
+          model: claude-opus-4-5-20251101
 
-  # 手動タスク実行
-  # ⚠️ DISABLED: SDK 0.2.15 bug - uncomment when fixed
-  manual-task:
-    if: false  # DISABLED - SDK bug
-    # Original: if: github.event_name == 'workflow_dispatch'
+  # @claude mention対応（レビューコメント）
+  respond-review-comment:
+    if: |
+      github.event_name == 'pull_request_review_comment' &&
+      contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Claude Code Task
-        # v1.0.31 にピン留め（SDK 0.2.15 バグ回避）
-        uses: anthropics/claude-code-action@96c48f49664faa0b49df7e1c6d63689fffb4700c
-        continue-on-error: true
+      - name: Claude Code Response
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prompt: |
-            Task: ${{ github.event.inputs.task }}
-            Execute the requested task.
+          model: claude-opus-4-5-20251101
