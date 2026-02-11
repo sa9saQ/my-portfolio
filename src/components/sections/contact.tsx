@@ -36,7 +36,7 @@ function FloatingInput({
   };
 
   const baseClass = cn(
-    "w-full px-4 pt-6 pb-2 rounded-xl glass border transition-all focus:outline-none",
+    "w-full px-4 pt-6 pb-2 rounded-xl glass border transition-all focus:outline-none text-foreground placeholder:text-muted-foreground/50 bg-transparent",
     error ? "border-red-500/50 focus:ring-2 focus:ring-red-500/30" : "border-border focus:ring-2 focus:ring-primary/50 focus:border-primary"
   );
 
@@ -51,7 +51,7 @@ function FloatingInput({
 
   return (
     <div className="relative">
-      <label className={cn("absolute left-4 transition-all duration-200 pointer-events-none text-muted-foreground/70", isActive ? "top-1.5 text-xs" : "top-4 text-sm")}>
+      <label className={cn("absolute left-4 transition-all duration-200 pointer-events-none text-muted-foreground", isActive ? "top-1.5 text-xs" : "top-4 text-sm")}>
         {label}
       </label>
       {textarea ? <textarea {...props} rows={rows} /> : <input {...props} type={type} />}
