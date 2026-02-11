@@ -6,6 +6,7 @@ import { AboutSection } from "@/components/sections/about";
 import { ProjectsPreview } from "@/components/sections/projects-preview";
 import { SkillsSection } from "@/components/sections/skills";
 import { ContactSection } from "@/components/sections/contact";
+import { SectionRevealWrapper } from "@/components/ui/section-wrapper";
 
 export default async function Home({
   params,
@@ -19,10 +20,18 @@ export default async function Home({
     <main className="min-h-screen">
       <Navbar />
       <HeroSection />
-      <AboutSection />
-      <ProjectsPreview />
-      <SkillsSection />
-      <ContactSection />
+      <SectionRevealWrapper>
+        <AboutSection />
+      </SectionRevealWrapper>
+      <SectionRevealWrapper>
+        <ProjectsPreview />
+      </SectionRevealWrapper>
+      <SectionRevealWrapper>
+        <SkillsSection />
+      </SectionRevealWrapper>
+      <SectionRevealWrapper>
+        <ContactSection />
+      </SectionRevealWrapper>
       <Footer />
     </main>
   );

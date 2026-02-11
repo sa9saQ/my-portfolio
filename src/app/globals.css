@@ -5,42 +5,37 @@
 @layer base {
   :root {
     /* Light Mode - Warm & Natural */
-    --background: 40 20% 97%;      /* Warm off-white */
-    --foreground: 20 10% 12%;      /* Warm dark brown */
-    --primary: 20 70% 45%;         /* Warm terracotta */
+    --background: 40 20% 97%;
+    --foreground: 20 10% 12%;
+    --primary: 20 70% 45%;
     --primary-foreground: 40 20% 97%;
     --secondary: 40 15% 93%;
     --secondary-foreground: 20 10% 12%;
     --muted: 35 12% 88%;
     --muted-foreground: 20 8% 45%;
-    --accent: 35 55% 50%;          /* Warm gold */
+    --accent: 35 55% 50%;
     --accent-foreground: 40 20% 97%;
     --card: 40 20% 99%;
     --card-foreground: 20 10% 12%;
     --border: 35 12% 88%;
-
-    /* Glass Effect Variables - Light */
     --glass-bg: 40 20% 99% / 0.75;
     --glass-border: 35 15% 88%;
   }
 
   .dark {
-    /* Dark Mode - Warm & Cozy */
-    --background: 25 15% 12%;      /* Warm dark */
+    --background: 25 15% 12%;
     --foreground: 40 15% 95%;
-    --primary: 25 65% 55%;         /* Warm terracotta light */
+    --primary: 25 65% 55%;
     --primary-foreground: 40 20% 97%;
     --secondary: 25 12% 18%;
     --secondary-foreground: 40 15% 95%;
     --muted: 25 10% 22%;
     --muted-foreground: 30 10% 60%;
-    --accent: 35 50% 55%;          /* Warm gold */
+    --accent: 35 50% 55%;
     --accent-foreground: 40 20% 97%;
     --card: 25 12% 16%;
     --card-foreground: 40 15% 95%;
     --border: 25 10% 25%;
-
-    /* Glass Effect Variables */
     --glass-bg: 25 15% 18% / 0.75;
     --glass-border: 40 10% 95% / 0.1;
   }
@@ -54,10 +49,14 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Smooth theme transitions */
+  html, body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
 }
 
 @layer components {
-  /* Subtle frosted panels - no heavy glow */
   .glass {
     background: hsl(var(--glass-bg));
     backdrop-filter: blur(10px);
@@ -103,22 +102,6 @@
 }
 
 @layer utilities {
-  @keyframes navbar-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(-100px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .navbar-fallback {
-    animation: navbar-fade-in 0.5s ease-out forwards;
-  }
-
-  /* Clean text accent - no heavy gradient */
   .text-gradient {
     @apply text-primary;
   }
@@ -131,7 +114,6 @@
     background: radial-gradient(circle at center, var(--tw-gradient-stops));
   }
 
-  /* Subtle shadow instead of glow */
   .glow-primary {
     box-shadow: 0 4px 20px hsl(var(--primary) / 0.15);
   }
@@ -167,7 +149,7 @@ html {
   @apply bg-primary/20;
 }
 
-/* Subtle glitch effect for hero name */
+/* Glitch text */
 @keyframes glitch-subtle {
   0%, 92%, 100% { transform: translate(0); opacity: 1; }
   93% { transform: translate(-2px, 1px); opacity: 0.8; }
@@ -211,4 +193,20 @@ html {
   .glitch-text::after {
     animation: none;
   }
+
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Noise texture overlay */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }

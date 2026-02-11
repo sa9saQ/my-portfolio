@@ -2,20 +2,18 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import { useTranslations, useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { Sun, Moon, Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { locales, localeNames, type Locale } from "@/i18n/config";
+import { ThemeToggle, ThemeToggleMobile } from "@/components/ui/theme-transition";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const { theme, setTheme } = useTheme();
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
@@ -29,21 +27,16 @@ export function Navbar() {
     { name: t("contact"), href: "#contact", id: "contact" },
   ];
 
-  // IntersectionObserver for active section detection
   useEffect(() => {
-    setMounted(true);
     const sectionIds = ["home", "about", "projects", "skills", "contact"];
     const observers: IntersectionObserver[] = [];
-
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveSection(id);
-            }
+            if (entry.isIntersecting) setActiveSection(id);
           });
         },
         { rootMargin: "-40% 0px -55% 0px" }
@@ -51,15 +44,11 @@ export function Navbar() {
       observer.observe(el);
       observers.push(observer);
     });
-
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // Progressive blur based on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -78,11 +67,14 @@ export function Navbar() {
 
   return (
     <>
-      <nav
+      <motion.nav
         className={cn(
-          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 glass-navbar navbar-fallback",
+          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 glass-navbar",
           isScrolled && "shadow-lg shadow-black/5"
         )}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         style={{
           backdropFilter: `blur(${isScrolled ? 20 : 12}px)`,
           WebkitBackdropFilter: `blur(${isScrolled ? 20 : 12}px)`,
@@ -90,24 +82,22 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
-            {/* Logo */}
             <motion.a
               href="#home"
-              className="text-xl font-heading font-bold text-aurora cursor-pointer"
+              className="text-xl font-heading font-bold text-primary cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Portfolio
             </motion.a>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:!flex items-center gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <motion.button
                   key={item.id}
                   onClick={() => handleNavClick(item.href)}
                   className={cn(
-                    "relative text-muted-foreground hover:text-foreground transition-colors",
+                    "relative text-muted-foreground hover:text-foreground transition-colors cursor-pointer",
                     activeSection === item.id && "text-foreground"
                   )}
                   whileHover={{ scale: 1.05 }}
@@ -124,7 +114,6 @@ export function Navbar() {
                 </motion.button>
               ))}
 
-              {/* Language Switcher */}
               <div className="relative">
                 <motion.button
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
@@ -135,7 +124,6 @@ export function Navbar() {
                   <Globe className="w-4 h-4" />
                   <span className="text-xs font-medium uppercase">{locale}</span>
                 </motion.button>
-
                 <AnimatePresence>
                   {isLangMenuOpen && (
                     <motion.div
@@ -161,24 +149,10 @@ export function Navbar() {
                 </AnimatePresence>
               </div>
 
-              {/* Theme Toggle */}
-              <motion.button
-                onClick={() => mounted && setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2.5 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
-                whileHover={{ scale: 1.1, rotate: 15 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {mounted ? (
-                  theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />
-                ) : (
-                  <Sun className="w-4 h-4" />
-                )}
-              </motion.button>
+              <ThemeToggle />
             </div>
 
-            {/* Mobile Menu Button */}
             <div className="flex md:!hidden items-center gap-2">
-              {/* Language Switcher Mobile */}
               <motion.button
                 onClick={() => switchLocale(locale === "ja" ? "en" : "ja")}
                 className="p-2 rounded-full glass flex items-center gap-1 cursor-pointer"
@@ -187,35 +161,19 @@ export function Navbar() {
                 <Globe className="w-4 h-4" />
                 <span className="text-xs uppercase">{locale === "ja" ? "EN" : "JA"}</span>
               </motion.button>
-
-              <motion.button
-                onClick={() => mounted && setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-full glass cursor-pointer"
-                whileTap={{ scale: 0.9 }}
-              >
-                {mounted ? (
-                  theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />
-                ) : (
-                  <Sun className="w-4 h-4" />
-                )}
-              </motion.button>
+              <ThemeToggleMobile />
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 glass rounded-full cursor-pointer"
                 whileTap={{ scale: 0.9 }}
               >
-                {isMobileMenuOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </motion.button>
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
