@@ -62,7 +62,7 @@ export function ProjectsSection() {
           <h1 className="text-4xl md:text-5xl font-bold mt-2 mb-4">
             {t("allProjects")}
           </h1>
-          <div className="w-20 h-1 bg-gradient-to-r from-orange-500 to-amber-500 mx-auto rounded-full" />
+          <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
         </motion.div>
 
         {/* Category Filter */}
