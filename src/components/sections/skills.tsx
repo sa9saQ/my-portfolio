@@ -41,7 +41,7 @@ const skillCategories: SkillCategory[] = [
     titleKey: "categories.creating",
     icon: Lightbulb,
     skills: [
-      { name: "Web\u30b5\u30a4\u30c8\u5236\u4f5c", level: 85 },
+      { name: "\u30b5\u30a4\u30c8\u5236\u4f5c", level: 85 },
       { name: "UI\u30c7\u30b6\u30a4\u30f3", level: 75 },
       { name: "\u30d7\u30ed\u30f3\u30d7\u30c8\u8a2d\u8a08", level: 95 },
       { name: "\u4f01\u753b / \u30a2\u30a4\u30c7\u30a2", level: 95 },
@@ -56,10 +56,7 @@ function AnimatedNumber({ value, inView }: { value: number; inView: boolean }) {
 
   useEffect(() => {
     if (inView) {
-      const controls = animate(motionVal, value, {
-        duration: 1.2,
-        ease: "easeOut",
-      });
+      const controls = animate(motionVal, value, { duration: 1.2, ease: "easeOut" });
       return controls.stop;
     }
   }, [inView, value, motionVal]);
@@ -101,42 +98,49 @@ export function SkillsSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const t = useTranslations("skills");
 
+  const headingText = t("heading");
+
   return (
     <section id="skills" className="py-16 sm:py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
-        {/* Section Header */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, filter: "blur(10px)" }}
+          animate={isInView ? { opacity: 1, filter: "blur(0px)" } : {}}
+          transition={{ duration: 0.8 }}
         >
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
-            {t("heading")}
+            {headingText.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                style={{ display: "inline-block" }}
+                initial={{ opacity: 0, filter: "blur(8px)" }}
+                animate={isInView ? { opacity: 1, filter: "blur(0px)" } : {}}
+                transition={{ duration: 0.5, delay: i * 0.04 }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
           </h2>
           <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
 
-        {/* Skills Grid */}
         <div className="grid md:grid-cols-3 gap-6">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.titleKey}
               className="glass-card group"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: categoryIndex * 0.2 }}
+              initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
+              animate={isInView ? { opacity: 1, filter: "blur(0px)", y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 + categoryIndex * 0.15 }}
               whileHover={{ y: -5 }}
             >
-              {/* Category Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 rounded-xl glass group-hover:glow-aurora transition-all duration-300">
                   <category.icon className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-heading font-bold">{t(category.titleKey)}</h3>
               </div>
-
-              {/* Skill Bars */}
               <div className="space-y-5">
                 {category.skills.map((skill, skillIndex) => (
                   <SkillBar
@@ -151,27 +155,15 @@ export function SkillsSection() {
           ))}
         </div>
 
-        {/* Additional Tech Tags */}
         <motion.div
           className="mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <p className="text-center text-muted-foreground mb-8">
-            {t("alsoExperienced")}
-          </p>
+          <p className="text-center text-muted-foreground mb-8">{t("alsoExperienced")}</p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {[
-              "Vercel",
-              "Notion",
-              "Figma",
-              "Canva",
-              "Discord",
-              "Supabase",
-              "Next.js",
-              "Tailwind CSS",
-            ].map((tech, index) => (
+            {["Vercel", "Notion", "Figma", "Canva", "Discord", "Supabase", "Next.js", "Tailwind CSS"].map((tech, index) => (
               <motion.div
                 key={tech}
                 className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass text-xs sm:text-sm font-medium hover:border-primary/30 transition-all duration-300"

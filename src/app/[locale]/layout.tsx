@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme-provider";
 import { locales } from "@/i18n/config";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 import "../globals.css";
 
 const inter = Inter({
@@ -61,6 +63,8 @@ export default async function RootLayout({
           disableTransitionOnChange={false}
         >
           <NextIntlClientProvider messages={messages}>
+            <AuroraBackground />
+            <CustomCursor />
             {children}
           </NextIntlClientProvider>
         </ThemeProvider>

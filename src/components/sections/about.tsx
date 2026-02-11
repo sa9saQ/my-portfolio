@@ -44,26 +44,10 @@ export function AboutSection() {
   const t = useTranslations("about");
 
   const features = [
-    {
-      icon: Code,
-      title: t("features.cleanCode.title"),
-      description: t("features.cleanCode.description"),
-    },
-    {
-      icon: Palette,
-      title: t("features.creativeDesign.title"),
-      description: t("features.creativeDesign.description"),
-    },
-    {
-      icon: Rocket,
-      title: t("features.performance.title"),
-      description: t("features.performance.description"),
-    },
-    {
-      icon: Sparkles,
-      title: t("features.innovation.title"),
-      description: t("features.innovation.description"),
-    },
+    { icon: Code, title: t("features.cleanCode.title"), description: t("features.cleanCode.description") },
+    { icon: Palette, title: t("features.creativeDesign.title"), description: t("features.creativeDesign.description") },
+    { icon: Rocket, title: t("features.performance.title"), description: t("features.performance.description") },
+    { icon: Sparkles, title: t("features.innovation.title"), description: t("features.innovation.description") },
   ];
 
   const headingText = t("heading");
@@ -73,19 +57,20 @@ export function AboutSection() {
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: -60, rotate: -3 }}
+          animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
             {headingText.split("").map((char, i) => (
               <motion.span
                 key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.3, delay: i * 0.04 }}
+                style={{ display: "inline-block" }}
+                initial={{ opacity: 0, y: 15, rotate: -10 + Math.random() * 20 }}
+                animate={isInView ? { opacity: 1, y: 0, rotate: 0 } : {}}
+                transition={{ duration: 0.4, delay: i * 0.04 }}
               >
-                {char}
+                {char === " " ? "\u00A0" : char}
               </motion.span>
             ))}
           </h2>
@@ -93,43 +78,32 @@ export function AboutSection() {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Profile Card with Glass Effect */}
           <motion.div
             className="relative"
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, x: -80, rotate: -2 }}
+            animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div className="relative max-w-md mx-auto">
-              {/* Decorative elements */}
               <div className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl blur-sm" />
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-sm" />
-
               <div className="relative z-10 glass-card p-8 flex flex-col justify-center min-h-[320px]">
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-2xl glass flex items-center justify-center text-3xl">
-                    👋
-                  </div>
+                  <div className="w-16 h-16 rounded-2xl glass flex items-center justify-center text-3xl">👋</div>
                   <h3 className="text-2xl font-heading font-bold">{t("hello")}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {t("description")}
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed">{t("description")}</p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Features Grid */}
           <motion.div
             className="space-y-6"
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            initial={{ opacity: 0, x: 80, rotate: 2 }}
+            animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.4 }}
           >
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {t("intro")}
-            </p>
-
+            <p className="text-lg text-muted-foreground leading-relaxed">{t("intro")}</p>
             <div className="grid sm:grid-cols-2 gap-4" style={{ perspective: "600px" }}>
               {features.map((feature, index) => (
                 <TiltCard key={feature.title} className="glass-card group cursor-pointer">
@@ -140,9 +114,7 @@ export function AboutSection() {
                   >
                     <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-all duration-300" />
                     <h4 className="font-heading font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{feature.title}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      {feature.description}
-                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{feature.description}</p>
                   </motion.div>
                 </TiltCard>
               ))}

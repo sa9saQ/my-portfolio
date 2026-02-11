@@ -25,6 +25,7 @@ export function HeroSection() {
 
   const subtitleText = t("subtitle");
   const subtitleChars = useMemo(() => subtitleText.split(""), [subtitleText]);
+  const nameText = t("name");
 
   const charVariants = {
     hidden: { opacity: 0 },
@@ -39,13 +40,11 @@ export function HeroSection() {
       id="home"
       className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden pt-24 sm:pt-28 pb-8"
     >
-      {/* Parallax gradient overlay */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background z-10 pointer-events-none"
         style={{ y: bgY, opacity: bgOpacity }}
       />
 
-      {/* Top spacer for balanced layout */}
       <div className="flex-shrink-0" />
 
       <div className="relative z-20 text-center px-4 max-w-4xl">
@@ -54,7 +53,6 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Glass Badge */}
           <motion.span
             className="inline-block px-5 py-2.5 mb-8 text-sm font-medium rounded-full glass text-foreground/90"
             initial={mounted ? { opacity: 0, scale: 0.8 } : false}
@@ -64,7 +62,6 @@ export function HeroSection() {
             {t("welcome")}
           </motion.span>
 
-          {/* Main Heading with Aurora gradient */}
           <motion.h1
             className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 tracking-tight"
             initial={mounted ? { opacity: 0, y: 20 } : false}
@@ -72,10 +69,11 @@ export function HeroSection() {
             transition={{ delay: 0.3 }}
           >
             {t("greeting")}
-            <span className="text-aurora">{t("name")}</span>
+            <span className="text-aurora glitch-text" data-text={nameText}>
+              {nameText}
+            </span>
           </motion.h1>
 
-          {/* Subtitle with typing animation */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
             {subtitleChars.map((char, i) => (
               <motion.span
@@ -90,7 +88,6 @@ export function HeroSection() {
             ))}
           </p>
 
-          {/* Social Links with tooltip */}
           <motion.div
             className="flex items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-12"
             initial={mounted ? { opacity: 0, y: 20 } : false}
@@ -109,7 +106,6 @@ export function HeroSection() {
                 aria-label={link.label}
               >
                 <link.icon className="w-5 h-5 sm:w-6 sm:h-6" />
-                {/* Tooltip */}
                 <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                   {link.label}
                 </span>
@@ -117,14 +113,12 @@ export function HeroSection() {
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
           <motion.div
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0"
             initial={mounted ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            {/* Primary CTA with Glow */}
             <motion.a
               href="#projects"
               className="relative w-full sm:w-auto min-w-[200px] px-8 py-4 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-medium text-center overflow-hidden group cursor-pointer"
@@ -134,8 +128,6 @@ export function HeroSection() {
               <span className="absolute inset-0 bg-primary/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <span className="relative">{t("viewProjects")}</span>
             </motion.a>
-
-            {/* Secondary CTA with Glass */}
             <motion.a
               href="#contact"
               className="w-full sm:w-auto min-w-[200px] px-8 py-4 sm:py-3.5 rounded-full glass font-medium text-center hover:glow-aurora transition-all duration-300 cursor-pointer"
@@ -148,7 +140,6 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
       <motion.div
         className="relative z-20 flex-shrink-0"
         initial={mounted ? { opacity: 0 } : false}

@@ -1,122 +1,189 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
-interface AuroraColor {
-  r: number;
-  g: number;
-  b: number;
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
+  baseX: number;
+  baseY: number;
 }
 
-// Warm, subtle color palette - avoid typical AI rainbow
-const AURORA_COLORS: AuroraColor[] = [
-  { r: 249, g: 115, b: 22 }, // Orange (primary)
-  { r: 245, g: 158, b: 11 }, // Amber
-  { r: 239, g: 68, b: 68 }, // Rose/Red accent
+const COLORS_DARK = [
+  "rgba(193, 114, 75, 0.6)",   // terracotta
+  "rgba(212, 163, 78, 0.5)",   // warm gold
+  "rgba(245, 228, 199, 0.4)",  // cream
+  "rgba(249, 115, 22, 0.5)",   // orange
 ];
+
+const COLORS_LIGHT = [
+  "rgba(193, 114, 75, 0.35)",
+  "rgba(212, 163, 78, 0.3)",
+  "rgba(180, 120, 60, 0.25)",
+  "rgba(249, 115, 22, 0.3)",
+];
+
+const LINE_DIST = 120;
+const MOUSE_RADIUS = 150;
+const PARTICLE_COUNT_DESKTOP = 80;
+const PARTICLE_COUNT_MOBILE = 35;
 
 export function AuroraBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
-  const timeRef = useRef(0);
+  const particlesRef = useRef<Particle[]>([]);
+  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const [isMobile, setIsMobile] = useState(false);
 
-  const draw = useCallback(
-    (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-      timeRef.current += 0.001; // Slower, more subtle animation
-      const time = timeRef.current;
-
-      ctx.clearRect(0, 0, width, height);
-
-      // 3つのオーロラレイヤーを描画
-      for (let i = 0; i < 3; i++) {
-        const gradient = ctx.createRadialGradient(
-          width * (0.3 + Math.sin(time + i * 2) * 0.3),
-          height * (0.3 + Math.cos(time * 0.7 + i * 1.5) * 0.3),
-          0,
-          width * 0.5,
-          height * 0.5,
-          width * 0.9
-        );
-
-        const c1 = AURORA_COLORS[i % AURORA_COLORS.length];
-        const c2 = AURORA_COLORS[(i + 1) % AURORA_COLORS.length];
-
-        // Very subtle gradient - less is more
-        gradient.addColorStop(0, `rgba(${c1.r},${c1.g},${c1.b},0.15)`);
-        gradient.addColorStop(0.5, `rgba(${c2.r},${c2.g},${c2.b},0.08)`);
-        gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
-      }
-
-      // 追加のアクセントレイヤー (Primary orange)
-      const accentGradient = ctx.createRadialGradient(
-        width * (0.7 + Math.sin(time * 1.3) * 0.2),
-        height * (0.6 + Math.cos(time * 0.9) * 0.2),
-        0,
-        width * 0.6,
-        height * 0.6,
-        width * 0.7
-      );
-      accentGradient.addColorStop(0, "rgba(249, 115, 22, 0.12)");
-      accentGradient.addColorStop(0.5, "rgba(249, 115, 22, 0.05)");
-      accentGradient.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = accentGradient;
-      ctx.fillRect(0, 0, width, height);
-    },
-    []
-  );
+  const createParticles = useCallback((w: number, h: number, count: number, isDark: boolean) => {
+    const colors = isDark ? COLORS_DARK : COLORS_LIGHT;
+    const particles: Particle[] = [];
+    for (let i = 0; i < count; i++) {
+      const x = Math.random() * w;
+      const y = Math.random() * h;
+      particles.push({
+        x, y,
+        baseX: x, baseY: y,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        radius: Math.random() * 2 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+    return particles;
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    const count = mobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
+    const lineDist = mobile ? 80 : LINE_DIST;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const isDark = document.documentElement.classList.contains("dark");
+
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+
+    particlesRef.current = createParticles(window.innerWidth, window.innerHeight, count, isDark);
+
+    const handleMouse = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+    const handleTouchEnd = () => {
+      mouseRef.current = { x: -9999, y: -9999 };
     };
 
-    resize();
-    window.addEventListener("resize", resize);
-
-    // prefers-reduced-motion チェック
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    window.addEventListener("mousemove", handleMouse, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("resize", resize, { passive: true });
 
     const animate = () => {
-      draw(ctx, window.innerWidth, window.innerHeight);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      const particles = particlesRef.current;
+      const mouse = mouseRef.current;
+
+      for (const p of particles) {
+        // Mouse repulsion
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_RADIUS && dist > 0) {
+          const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+          p.vx += (dx / dist) * force * 0.8;
+          p.vy += (dy / dist) * force * 0.8;
+        }
+
+        // Return to base
+        p.vx += (p.baseX - p.x) * 0.005;
+        p.vy += (p.baseY - p.y) * 0.005;
+
+        // Damping
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap
+        if (p.x < -10) { p.x = w + 10; p.baseX = p.x; }
+        if (p.x > w + 10) { p.x = -10; p.baseX = p.x; }
+        if (p.y < -10) { p.y = h + 10; p.baseY = p.y; }
+        if (p.y > h + 10) { p.y = -10; p.baseY = p.y; }
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+
+      // Draw lines between nearby particles
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < lineDist) {
+            const opacity = (1 - dist / lineDist) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = isDark
+              ? `rgba(212, 163, 78, ${opacity})`
+              : `rgba(193, 114, 75, ${opacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    if (prefersReducedMotion) {
-      // 静的な描画のみ
-      draw(ctx, window.innerWidth, window.innerHeight);
-    } else {
-      animate();
-    }
+    animate();
 
     return () => {
+      window.removeEventListener("mousemove", handleMouse);
+      window.removeEventListener("touchmove", handleTouch);
+      window.removeEventListener("touchend", handleTouchEnd);
       window.removeEventListener("resize", resize);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [draw]);
+  }, [createParticles]);
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.7 }}
       aria-hidden="true"
     />
   );
