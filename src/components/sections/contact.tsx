@@ -14,20 +14,89 @@ const socialLinks = [
   { icon: Linkedin, href: "https://www.linkedin.com/in/iori-kobayashi-099745390", label: "LinkedIn" },
 ];
 
-// Formspree endpoint - 登録後にIDを設定してください
 const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ID
   ? `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`
   : null;
 
-const inputClassName =
-  "w-full px-4 py-3 rounded-xl glass border border-border focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/50";
+function FloatingInput({
+  label,
+  name,
+  type = "text",
+  required = false,
+  textarea = false,
+  rows,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  textarea?: boolean;
+  rows?: number;
+}) {
+  const [focused, setFocused] = useState(false);
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+  const isActive = focused || value.length > 0;
+
+  const validate = (val: string) => {
+    if (type === "email" && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      setError("Invalid email");
+    } else {
+      setError("");
+    }
+  };
+
+  const baseClass = cn(
+    "w-full px-4 pt-6 pb-2 rounded-xl glass border transition-all focus:outline-none",
+    error
+      ? "border-red-500/50 focus:ring-2 focus:ring-red-500/30"
+      : "border-border focus:ring-2 focus:ring-primary/50 focus:border-primary"
+  );
+
+  const props = {
+    name,
+    required,
+    className: cn(baseClass, textarea && "resize-none"),
+    onFocus: () => setFocused(true),
+    onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFocused(false);
+      validate(e.target.value);
+    },
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setValue(e.target.value);
+      if (error) validate(e.target.value);
+    },
+    value,
+  };
+
+  return (
+    <div className="relative">
+      <label
+        className={cn(
+          "absolute left-4 transition-all duration-200 pointer-events-none text-muted-foreground/70",
+          isActive ? "top-1.5 text-xs" : "top-4 text-sm"
+        )}
+      >
+        {label}
+      </label>
+      {textarea ? (
+        <textarea {...props} rows={rows} />
+      ) : (
+        <input {...props} type={type} />
+      )}
+      {error && (
+        <span className="text-xs text-red-500 mt-1 block">{error}</span>
+      )}
+    </div>
+  );
+}
 
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const t = useTranslations("contact");
 
   const contactInfo = [
@@ -50,11 +119,10 @@ export function ContactSection() {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    setError(null);
+    setFormError(null);
 
     const formData = new FormData(e.currentTarget);
 
-    // Formspreeが未設定の場合はmailtoにフォールバック
     if (!FORMSPREE_ENDPOINT) {
       const name = formData.get("name") as string;
       const email = formData.get("email") as string;
@@ -72,18 +140,13 @@ export function ContactSection() {
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         body: formData,
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { Accept: "application/json" },
       });
 
-      if (!response.ok) {
-        throw new Error();
-      }
-
+      if (!response.ok) throw new Error();
       setIsSubmitted(true);
     } catch {
-      setError(t("form.error"));
+      setFormError(t("form.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -120,7 +183,6 @@ export function ContactSection() {
               </p>
             </div>
 
-            {/* Contact Details */}
             <div className="space-y-4">
               {contactInfo.map((info, index) => (
                 <motion.div
@@ -140,10 +202,7 @@ export function ContactSection() {
                   <div>
                     <p className="text-sm text-muted-foreground">{info.label}</p>
                     {info.href ? (
-                      <a
-                        href={info.href}
-                        className="font-medium hover:text-primary transition-colors"
-                      >
+                      <a href={info.href} className="font-medium hover:text-primary transition-colors">
                         {info.value}
                       </a>
                     ) : (
@@ -154,7 +213,6 @@ export function ContactSection() {
               ))}
             </div>
 
-            {/* Social Links */}
             <div>
               <p className="text-sm text-muted-foreground mb-4">{t("followMe")}</p>
               <div className="flex gap-3">
@@ -197,75 +255,28 @@ export function ContactSection() {
                 >
                   <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
                   <h4 className="text-xl font-bold mb-2">{t("form.sent")}</h4>
-                  <p className="text-muted-foreground">
-                    {t("form.sentMessage")}
-                  </p>
+                  <p className="text-muted-foreground">{t("form.sentMessage")}</p>
                 </motion.div>
               ) : (
                 <>
-                  {error && (
+                  {formError && (
                     <motion.div
                       className="flex items-center gap-2 p-4 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
                       <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                      <p className="text-sm">{error}</p>
+                      <p className="text-sm">{formError}</p>
                     </motion.div>
                   )}
 
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        {t("form.name")}
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        className={inputClassName}
-                        placeholder={t("form.namePlaceholder")}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        {t("form.email")}
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        className={inputClassName}
-                        placeholder={t("form.emailPlaceholder")}
-                      />
-                    </div>
+                    <FloatingInput label={t("form.name")} name="name" required />
+                    <FloatingInput label={t("form.email")} name="email" type="email" required />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      {t("form.subject")}
-                    </label>
-                    <input
-                      type="text"
-                      name="subject"
-                      required
-                      className={inputClassName}
-                      placeholder={t("form.subjectPlaceholder")}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      {t("form.message")}
-                    </label>
-                    <textarea
-                      name="message"
-                      required
-                      rows={5}
-                      className={cn(inputClassName, "resize-none")}
-                      placeholder={t("form.messagePlaceholder")}
-                    />
-                  </div>
+                  <FloatingInput label={t("form.subject")} name="subject" required />
+                  <FloatingInput label={t("form.message")} name="message" textarea rows={5} required />
 
                   <motion.button
                     type="submit"

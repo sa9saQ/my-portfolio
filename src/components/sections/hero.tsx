@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, useMemo } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowDown, Github, Mail } from "lucide-react";
 import { XIcon } from "@/components/icons/x-icon";
@@ -9,6 +9,9 @@ import { XIcon } from "@/components/icons/x-icon";
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
   const t = useTranslations("hero");
+  const { scrollY } = useScroll();
+  const bgY = useTransform(scrollY, [0, 500], [0, 150]);
+  const bgOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
 
   useEffect(() => {
     setMounted(true);
@@ -20,13 +23,27 @@ export function HeroSection() {
     { icon: Mail, href: "mailto:yizhix797@gmail.com", label: "Email" },
   ];
 
+  const subtitleText = t("subtitle");
+  const subtitleChars = useMemo(() => subtitleText.split(""), [subtitleText]);
+
+  const charVariants = {
+    hidden: { opacity: 0 },
+    visible: (i: number) => ({
+      opacity: 1,
+      transition: { delay: 0.8 + i * 0.03, duration: 0.1 },
+    }),
+  };
+
   return (
     <section
       id="home"
       className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden pt-24 sm:pt-28 pb-8"
     >
-      {/* Gradient overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background z-10 pointer-events-none" />
+      {/* Parallax gradient overlay */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background z-10 pointer-events-none"
+        style={{ y: bgY, opacity: bgOpacity }}
+      />
 
       {/* Top spacer for balanced layout */}
       <div className="flex-shrink-0" />
@@ -58,16 +75,22 @@ export function HeroSection() {
             <span className="text-aurora">{t("name")}</span>
           </motion.h1>
 
-          <motion.p
-            className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
-            initial={mounted ? { opacity: 0, y: 20 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            {t("subtitle")}
-          </motion.p>
+          {/* Subtitle with typing animation */}
+          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+            {subtitleChars.map((char, i) => (
+              <motion.span
+                key={i}
+                custom={i}
+                variants={charVariants}
+                initial="hidden"
+                animate={mounted ? "visible" : "hidden"}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </p>
 
-          {/* Social Links with Glass effect */}
+          {/* Social Links with tooltip */}
           <motion.div
             className="flex items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-12"
             initial={mounted ? { opacity: 0, y: 20 } : false}
@@ -80,12 +103,16 @@ export function HeroSection() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 sm:p-4 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
+                className="relative group p-3 sm:p-4 rounded-full glass hover:glow-aurora transition-all duration-300 cursor-pointer"
                 whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={link.label}
               >
                 <link.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                {/* Tooltip */}
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                  {link.label}
+                </span>
               </motion.a>
             ))}
           </motion.div>
@@ -121,7 +148,7 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator - minimal design for visual balance */}
+      {/* Scroll Indicator */}
       <motion.div
         className="relative z-20 flex-shrink-0"
         initial={mounted ? { opacity: 0 } : false}

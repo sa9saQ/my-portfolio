@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Bot, Wrench, Lightbulb, type LucideIcon } from "lucide-react";
 
@@ -42,15 +41,38 @@ const skillCategories: SkillCategory[] = [
     titleKey: "categories.creating",
     icon: Lightbulb,
     skills: [
-      { name: "Webサイト制作", level: 85 },
-      { name: "UIデザイン", level: 75 },
-      { name: "プロンプト設計", level: 95 },
-      { name: "企画 / アイデア", level: 95 },
+      { name: "Web\u30b5\u30a4\u30c8\u5236\u4f5c", level: 85 },
+      { name: "UI\u30c7\u30b6\u30a4\u30f3", level: 75 },
+      { name: "\u30d7\u30ed\u30f3\u30d7\u30c8\u8a2d\u8a08", level: 95 },
+      { name: "\u4f01\u753b / \u30a2\u30a4\u30c7\u30a2", level: 95 },
     ],
   },
 ];
 
-function SkillBar({ skill, delay }: { skill: Skill; delay: number }) {
+function AnimatedNumber({ value, inView }: { value: number; inView: boolean }) {
+  const motionVal = useMotionValue(0);
+  const rounded = useTransform(motionVal, (v) => Math.round(v));
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (inView) {
+      const controls = animate(motionVal, value, {
+        duration: 1.2,
+        ease: "easeOut",
+      });
+      return controls.stop;
+    }
+  }, [inView, value, motionVal]);
+
+  useEffect(() => {
+    const unsub = rounded.on("change", (v) => setDisplay(v));
+    return unsub;
+  }, [rounded]);
+
+  return <>{display}%</>;
+}
+
+function SkillBar({ skill, delay, sectionInView }: { skill: Skill; delay: number; sectionInView: boolean }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -58,7 +80,9 @@ function SkillBar({ skill, delay }: { skill: Skill; delay: number }) {
     <div ref={ref} className="space-y-2">
       <div className="flex justify-between text-sm">
         <span className="font-medium">{skill.name}</span>
-        <span className="text-muted-foreground">{skill.level}%</span>
+        <span className="text-muted-foreground tabular-nums">
+          <AnimatedNumber value={skill.level} inView={isInView && sectionInView} />
+        </span>
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <motion.div
@@ -119,6 +143,7 @@ export function SkillsSection() {
                     key={skill.name}
                     skill={skill}
                     delay={categoryIndex * 0.2 + skillIndex * 0.1}
+                    sectionInView={isInView}
                   />
                 ))}
               </div>

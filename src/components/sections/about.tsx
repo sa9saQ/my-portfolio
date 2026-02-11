@@ -1,9 +1,42 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, useMotionValue, useTransform } from "framer-motion";
+import { useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Code, Palette, Rocket, Sparkles } from "lucide-react";
+
+function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [4, -4]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-4, 4]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  }, [mouseX, mouseY]);
+
+  const handleMouseLeave = useCallback(() => {
+    mouseX.set(0);
+    mouseY.set(0);
+  }, [mouseX, mouseY]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function AboutSection() {
   const ref = useRef(null);
@@ -33,6 +66,8 @@ export function AboutSection() {
     },
   ];
 
+  const headingText = t("heading");
+
   return (
     <section id="about" className="py-16 sm:py-24 px-4 relative overflow-hidden">
       <div ref={ref} className="max-w-6xl mx-auto relative z-10">
@@ -43,7 +78,16 @@ export function AboutSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-heading font-bold mb-3">
-            {t("heading")}
+            {headingText.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.3, delay: i * 0.04 }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </h2>
           <p className="text-muted-foreground text-lg">{t("title")}</p>
         </motion.div>
@@ -86,22 +130,21 @@ export function AboutSection() {
               {t("intro")}
             </p>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4" style={{ perspective: "600px" }}>
               {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  className="glass-card group cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-all duration-300" />
-                  <h4 className="font-heading font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{feature.title}</h4>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </motion.div>
+                <TiltCard key={feature.title} className="glass-card group cursor-pointer">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+                  >
+                    <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-all duration-300" />
+                    <h4 className="font-heading font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{feature.title}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                </TiltCard>
               ))}
             </div>
           </motion.div>

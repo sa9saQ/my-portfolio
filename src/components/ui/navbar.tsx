@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useTranslations, useLocale } from "next-intl";
@@ -14,6 +14,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const { theme, setTheme } = useTheme();
   const t = useTranslations("nav");
   const locale = useLocale();
@@ -21,27 +22,53 @@ export function Navbar() {
   const router = useRouter();
 
   const navItems = [
-    { name: t("home"), href: "#home" },
-    { name: t("about"), href: "#about" },
-    { name: t("projects"), href: "#projects" },
-    { name: t("skills"), href: "#skills" },
-    { name: t("contact"), href: "#contact" },
+    { name: t("home"), href: "#home", id: "home" },
+    { name: t("about"), href: "#about", id: "about" },
+    { name: t("projects"), href: "#projects", id: "projects" },
+    { name: t("skills"), href: "#skills", id: "skills" },
+    { name: t("contact"), href: "#contact", id: "contact" },
   ];
 
+  // IntersectionObserver for active section detection
   useEffect(() => {
     setMounted(true);
+    const sectionIds = ["home", "about", "projects", "skills", "contact"];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px" }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  // Progressive blur based on scroll
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = useCallback((href: string) => {
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
     element?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   const switchLocale = (newLocale: Locale) => {
     const currentPath = pathname.replace(`/${locale}`, "") || "/";
@@ -53,9 +80,13 @@ export function Navbar() {
     <>
       <nav
         className={cn(
-          "fixed top-4 left-4 right-4 z-50 transition-all duration-300 glass-navbar navbar-fallback",
+          "fixed top-4 left-4 right-4 z-50 transition-all duration-500 glass-navbar navbar-fallback",
           isScrolled && "shadow-lg shadow-black/5"
         )}
+        style={{
+          backdropFilter: `blur(${isScrolled ? 20 : 12}px)`,
+          WebkitBackdropFilter: `blur(${isScrolled ? 20 : 12}px)`,
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
@@ -73,19 +104,23 @@ export function Navbar() {
             <div className="hidden md:!flex items-center gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <motion.button
-                  key={item.name}
+                  key={item.id}
                   onClick={() => handleNavClick(item.href)}
-                  className="text-muted-foreground hover:text-foreground transition-colors relative"
+                  className={cn(
+                    "relative text-muted-foreground hover:text-foreground transition-colors",
+                    activeSection === item.id && "text-foreground"
+                  )}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.name}
-                  <motion.span
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.2 }}
-                  />
+                  {activeSection === item.id && (
+                    <motion.span
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                      layoutId="navbar-indicator"
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
                 </motion.button>
               ))}
 
@@ -192,9 +227,14 @@ export function Navbar() {
             <div className="px-6 py-6 space-y-4">
               {navItems.map((item, index) => (
                 <motion.button
-                  key={item.name}
+                  key={item.id}
                   onClick={() => handleNavClick(item.href)}
-                  className="block w-full text-left text-lg text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  className={cn(
+                    "block w-full text-left text-lg transition-colors cursor-pointer",
+                    activeSection === item.id
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
