@@ -51,7 +51,7 @@ function FloatingInput({
 
   return (
     <div className="relative">
-      <label className={cn("absolute left-4 transition-all duration-200 pointer-events-none text-muted-foreground", isActive ? "top-1.5 text-xs" : "top-4 text-sm")}>
+      <label className={cn("absolute left-4 transition-all duration-200 pointer-events-none text-foreground/70", isActive ? "top-1.5 text-xs" : "top-4 text-sm")}>
         {label}
       </label>
       {textarea ? <textarea {...props} rows={rows} /> : <input {...props} type={type} />}
